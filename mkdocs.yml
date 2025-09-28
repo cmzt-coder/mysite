@@ -124,9 +124,8 @@ nav:
           - DEV/React/h5.md
           - DEV/React/notes.md
           - DEV/React/vite.md
-          - DEV/React/Canal在Spring Boot环境下的MySQL数据同步集成指南.md
       - Canal:
-          - DEV/Canal/canal.html
+          - DEV/Canal/Canal在Spring Boot环境下的MySQL数据同步集成指南.md
       - Three:
           - DEV/Three/setup.md
       - WebGPU:
