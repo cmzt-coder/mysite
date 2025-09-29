@@ -3,223 +3,1426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML演示页面</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
+    <title>Canal在Spring Boot环境下的MySQL数据同步集成指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        // Tailwind配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#475569',
+                        accent: '#3b82f6',
+                        light: '#f8fafc',
+                        dark: '#1e293b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .demo-section {
-            margin: 20px 0;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background: #2980b9;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
-        .result {
-            margin-top: 10px;
-            padding: 10px;
-            background: #e8f5e8;
-            border-left: 4px solid #27ae60;
-            border-radius: 3px;
-        }
-        .hidden {
-            display: none;
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            }
+            .border-light {
+                border-color: rgba(203, 213, 225, 0.5);
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🎯 HTML功能演示页面</h1>
+<body class="bg-light text-dark font-sans">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm border-b border-light">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-primary flex items-center">
+                <i class="fa fa-database mr-2"></i>
+                <span>Canal集成指南</span>
+            </h1>
+            <button id="menuToggle" class="md:hidden text-secondary hover:text-primary transition-colors">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+            <nav id="mainNav" class="hidden md:flex space-x-6">
+                <a href="#intro" class="text-secondary hover:text-primary transition-colors font-medium">引言概述</a>
+                <a href="#environment" class="text-secondary hover:text-primary transition-colors font-medium">环境准备</a>
+                <a href="#canal-server" class="text-secondary hover:text-primary transition-colors font-medium">Canal部署</a>
+                <a href="#spring-boot" class="text-secondary hover:text-primary transition-colors font-medium">Spring Boot集成</a>
+            </nav>
+        </div>
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-light">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#intro" class="text-secondary hover:text-primary transition-colors py-2 font-medium">引言概述</a>
+                <a href="#environment" class="text-secondary hover:text-primary transition-colors py-2 font-medium">环境准备</a>
+                <a href="#canal-server" class="text-secondary hover:text-primary transition-colors py-2 font-medium">Canal部署</a>
+                <a href="#spring-boot" class="text-secondary hover:text-primary transition-colors py-2 font-medium">Spring Boot集成</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 引言与Canal基础概述 -->
+        <section id="intro" class="mb-16 scroll-mt-20">
+            <div class="bg-gradient-blue rounded-xl p-6 shadow-sm mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4 text-shadow">1. 引言与Canal基础概述</h2>
+                <p class="text-secondary mb-4">本文详细介绍Canal在Spring Boot环境下与MySQL数据同步的完整集成流程，包括环境准备、Canal部署配置以及Spring Boot客户端开发。</p>
+            </div>
+
+            <!-- 1.1 Canal简介与核心原理 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-info-circle mr-2"></i>1.1 Canal简介与核心原理
+                </h3>
+                <p class="mb-4 text-secondary">Canal是阿里巴巴开源的一款基于MySQL数据库增量日志解析的高性能数据同步系统，其英文含义为"管道"或"沟渠"，形象地表达了其在数据传输中的作用。</p>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-6 border border-light">
+                    <h4 class="font-semibold text-dark mb-2">核心工作原理</h4>
+                    <ol class="list-decimal list-inside space-y-2 text-secondary pl-2">
+                        <li>Canal模拟MySQL slave的身份向master发送dump请求</li>
+                        <li>MySQL master收到请求后开始推送binary log给Canal</li>
+                        <li>Canal解析接收到的二进制日志对象，转换为结构化的数据变更事件</li>
+                    </ol>
+                </div>
+
+                <h4 class="font-semibold text-dark mb-2">支持的MySQL版本</h4>
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">5.1.x</span>
+                    <span class="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">5.5.x</span>
+                    <span class="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">5.6.x</span>
+                    <span class="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">5.7.x</span>
+                    <span class="bg-blue-50 text-primary px-3 py-1 rounded-full text-sm">8.0.x</span>
+                </div>
+
+                <h4 class="font-semibold text-dark mb-2">典型应用场景</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-3 border border-light flex items-center">
+                        <i class="fa fa-database text-primary mr-3 text-lg"></i>
+                        <span class="text-secondary">数据库镜像</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-light flex items-center">
+                        <i class="fa fa-backup text-primary mr-3 text-lg"></i>
+                        <span class="text-secondary">数据库实时备份</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-light flex items-center">
+                        <i class="fa fa-search text-primary mr-3 text-lg"></i>
+                        <span class="text-secondary">索引构建和实时维护</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-light flex items-center">
+                        <i class="fa fa-refresh text-primary mr-3 text-lg"></i>
+                        <span class="text-secondary">业务缓存刷新</span>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 border border-light flex items-center">
+                        <i class="fa fa-cogs text-primary mr-3 text-lg"></i>
+                        <span class="text-secondary">增量数据处理</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.2 Canal架构组件与工作机制 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-sitemap mr-2"></i>1.2 Canal架构组件与工作机制
+                </h3>
+                <p class="mb-4 text-secondary">Canal的整体架构采用Server-Instance模式设计，主要由Canal Server和Canal Instance两个核心组件构成。</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-gray-50 rounded-lg p-4 border border-light">
+                        <h4 class="font-semibold text-dark mb-2 flex items-center">
+                            <i class="fa fa-server text-primary mr-2"></i>Canal Server
+                        </h4>
+                        <p class="text-secondary text-sm">代表一个Canal运行实例，对应一个JVM进程。负责管理和运行整个Canal服务，处理数据源的接入、数据解析、过滤和存储等任务。支持集群化部署，通过Zookeeper管理集群状态。</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4 border border-light">
+                        <h4 class="font-semibold text-dark mb-2 flex items-center">
+                            <i class="fa fa-list-alt text-primary mr-2"></i>Canal Instance
+                        </h4>
+                        <p class="text-secondary text-sm">对应一个数据队列，负责从特定数据源读取变更数据并推送到下游消费者。每个Instance独立运行，管理特定的数据库连接和数据流。</p>
+                    </div>
+                </div>
+
+                <h4 class="font-semibold text-dark mb-3">Canal Instance核心组件</h4>
+                <div class="overflow-x-auto mb-6">
+                    <table class="min-w-full bg-white border border-light rounded-lg">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">组件名称</th>
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">主要功能</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">EventParser</td>
+                                <td class="py-3 px-4 text-sm text-secondary border-b border-light">数据源接入，模拟主从协议交互，解析变更数据</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">EventSink</td>
+                                <td class="py-3 px-4 text-sm text-secondary border-b border-light">数据过滤、加工和分发，连接Parser和Store</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">EventStore</td>
+                                <td class="py-3 px-4 text-sm text-secondary border-b border-light">暂存"尚未消费"的events，默认基于内存的阻塞队列</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm font-medium text-dark">MetaManager</td>
+                                <td class="py-3 px-4 text-sm text-secondary">管理增量订阅和消费信息，维护Instance状态</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 1.3 技术选型考量与优势分析 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-balance-scale mr-2"></i>1.3 技术选型考量与优势分析
+                </h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">数据同步工具对比</h4>
+                    <div class="h-[300px] mb-4">
+                        <canvas id="toolComparisonChart"></canvas>
+                    </div>
+                </div>
+
+                <h4 class="font-semibold text-dark mb-3">Canal核心优势</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-bolt text-primary mr-2"></i>
+                            <h5 class="font-medium text-dark">实时性高</h5>
+                        </div>
+                        <p class="text-sm text-secondary">基于binlog的增量同步，毫秒级同步，延迟控制在1秒内，不侵入业务代码</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-tachometer text-primary mr-2"></i>
+                            <h5 class="font-medium text-dark">性能卓越</h5>
+                        </div>
+                        <p class="text-sm text-secondary">1.1.x版本性能提升150%，原生支持Prometheus监控、Kafka消息投递</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-puzzle-piece text-primary mr-2"></i>
+                            <h5 class="font-medium text-dark">架构灵活</h5>
+                        </div>
+                        <p class="text-sm text-secondary">支持单机、集群、分布式多种部署模式，支持动态扩展与故障自动转移</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-cubes text-primary mr-2"></i>
+                            <h5 class="font-medium text-dark">生态完善</h5>
+                        </div>
+                        <p class="text-sm text-secondary">支持Java、C#、Go、PHP、Python等多种编程语言客户端实现</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-check-circle text-primary mr-2"></i>
+                            <h5 class="font-medium text-dark">使用便捷</h5>
+                        </div>
+                        <p class="text-sm text-secondary">与Spring Boot集成简单，引入依赖即可快速实现数据同步功能</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 部署环境准备与MySQL配置 -->
+        <section id="environment" class="mb-16 scroll-mt-20">
+            <div class="bg-gradient-blue rounded-xl p-6 shadow-sm mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4 text-shadow">2. 部署环境准备与MySQL配置</h2>
+                <p class="text-secondary">本节介绍Canal部署所需的系统环境要求、MySQL配置调整以及网络安全设置。</p>
+            </div>
+
+            <!-- 2.1 系统环境要求与软件依赖 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-desktop mr-2"></i>2.1 系统环境要求与软件依赖
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="font-semibold text-dark mb-3">基础环境要求</h4>
+                        <ul class="space-y-2 text-secondary">
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span><strong>操作系统：</strong>Windows、Linux、MacOS（推荐Linux）</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span><strong>Java环境：</strong>JDK 1.8或以上版本</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check text-green-500 mt-1 mr-2"></i>
+                                <span><strong>MySQL版本：</strong>5.1.x、5.5.x、5.6.x、5.7.x、8.0.x</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-dark mb-3">推荐硬件配置</h4>
+                        <ul class="space-y-2 text-secondary">
+                            <li class="flex items-start">
+                                <i class="fa fa-microchip text-primary mt-1 mr-2"></i>
+                                <span><strong>CPU：</strong>至少4核，推荐8核或以上</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-memory text-primary mt-1 mr-2"></i>
+                                <span><strong>内存：</strong>至少8GB，推荐16GB或以上</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-hdd-o text-primary mt-1 mr-2"></i>
+                                <span><strong>磁盘：</strong>至少100GB可用空间，推荐SSD</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-4 border border-light">
+                    <h4 class="font-semibold text-dark mb-2">网络环境要求</h4>
+                    <ul class="space-y-2 text-secondary">
+                        <li class="flex items-start">
+                            <i class="fa fa-signal text-primary mt-1 mr-2"></i>
+                            <span>Canal服务器与MySQL服务器网络连接稳定，延迟建议小于1ms</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-exchange text-primary mt-1 mr-2"></i>
+                            <span>带宽满足数据传输需求，根据实际数据量调整</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-clock-o text-primary mt-1 mr-2"></i>
+                            <span>建议启用NTP时间同步，确保服务器时间一致性</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2.2 MySQL配置调整与优化 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-cog mr-2"></i>2.2 MySQL配置调整与优化
+                </h3>
+
+                <!-- 2.2.1 开启binlog日志功能 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">2.2.1 开启binlog日志功能</h4>
+                    <p class="text-secondary mb-3">编辑MySQL配置文件（my.cnf或my.ini），在[mysqld]区块下添加以下配置：</p>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>[mysqld]
+log-bin=mysql-bin  # 开启binlog功能
+binlog-format=ROW  # 设置binlog格式为ROW模式
+server_id=1        # 配置MySQL replication需要的server ID，不要与Canal的slaveId重复</code></pre>
+                    </div>
+                    <p class="text-secondary mt-3 mb-2">重启MySQL服务后，使用以下命令检查binlog是否已正确开启：</p>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>SHOW VARIABLES LIKE 'log_bin';
+SHOW VARIABLES LIKE 'binlog_format';
+SHOW VARIABLES LIKE 'server_id';</code></pre>
+                    </div>
+                </div>
+
+                <!-- 2.2.2 设置binlog相关参数 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">2.2.2 设置binlog相关参数</h4>
+                    <p class="text-secondary mb-3">添加以下配置以优化性能和安全性：</p>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>[mysqld]
+expire_logs_days=7          # 设置binlog过期时间为7天
+binlog_row_image=FULL        # 记录完整的行数据
+binlog-ignore-db=mysql      # 忽略mysql系统库的binlog记录
+lower_case_table_names=1     # 表名存储为小写，比较时不区分大小写
+default_authentication_plugin=mysql_native_password  # 使用传统的密码认证方式</code></pre>
+                    </div>
+                </div>
+
+                <!-- 2.2.3 创建Canal专用用户并授权 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">2.2.3 创建Canal专用用户并授权</h4>
+                    <p class="text-secondary mb-3">为Canal创建专用的数据库用户，并授予必要的权限：</p>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>CREATE USER 'canal'@'%' IDENTIFIED BY 'canal123';  # 创建canal用户，密码为canal123
+GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'canal'@'%';  # 授予必要的权限
+FLUSH PRIVILEGES;  # 刷新权限</code></pre>
+                    </div>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-4">
+                        <h5 class="font-medium text-yellow-800 mb-1 flex items-center">
+                            <i class="fa fa-exclamation-triangle mr-2"></i>注意事项
+                        </h5>
+                        <p class="text-sm text-yellow-700">如果MySQL启用了密码策略，密码设置不能过于简单，否则会出现密码策略错误。此时需要设置更复杂的密码或调整MySQL的密码策略配置。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.3 网络环境与安全配置 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-shield mr-2"></i>2.3 网络环境与安全配置
+                </h3>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">端口开放要求</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-light rounded-lg">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">服务/功能</th>
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">默认端口</th>
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">用途说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">MySQL数据库</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">3306</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">Canal服务器访问MySQL的端口</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">Canal Server</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">11111</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">Canal Server提供socket服务的端口</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">Canal Admin</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">11110</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">Canal管理控制台端口（如果启用）</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark">Canal metrics</td>
+                                    <td class="py-3 px-4 text-sm text-secondary">11112</td>
+                                    <td class="py-3 px-4 text-sm text-secondary">Prometheus监控指标拉取端口</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">Linux防火墙配置示例</h4>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code># 使用firewalld开放端口
+firewall-cmd --zone=public --add-port=11111/tcp --permanent
+firewall-cmd --zone=public --add-port=11110/tcp --permanent
+firewall-cmd --zone=public --add-port=11112/tcp --permanent
+firewall-cmd --reload
+
+# 查看已开放的端口
+firewall-cmd --list-ports</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-4 border border-light">
+                    <h4 class="font-semibold text-dark mb-2">安全加固建议</h4>
+                    <ul class="space-y-2 text-secondary">
+                        <li class="flex items-start">
+                            <i class="fa fa-lock text-primary mt-1 mr-2"></i>
+                            <span>将Canal部署在独立的服务器上，与数据库服务器分离</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-user-secret text-primary mt-1 mr-2"></i>
+                            <span>使用专用的数据库用户，避免使用root等超级用户</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-filter text-primary mt-1 mr-2"></i>
+                            <span>限制Canal服务器的网络访问权限，只允许必要的连接</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-history text-primary mt-1 mr-2"></i>
+                            <span>定期审查数据库访问日志，监控异常访问行为</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-clock-o text-primary mt-1 mr-2"></i>
+                            <span>启用NTP时间同步，确保服务器时间一致性</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Canal Server部署与配置 -->
+        <section id="canal-server" class="mb-16 scroll-mt-20">
+            <div class="bg-gradient-blue rounded-xl p-6 shadow-sm mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4 text-shadow">3. Canal Server部署与配置</h2>
+                <p class="text-secondary">本节详细介绍Canal Server的下载安装、配置文件详解、多instance配置以及集群部署方案。</p>
+            </div>
+
+            <!-- 3.1 下载安装与目录结构 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-download mr-2"></i>3.1 下载安装与目录结构
+                </h3>
+
+                <!-- 3.1.1 版本选择与下载 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">3.1.1 版本选择与下载</h4>
+                    <p class="text-secondary mb-3">Canal的最新稳定版本是1.1.8（发布于2025年1月16日），推荐从官方GitHub发布页面下载：</p>
+                    <div class="bg-blue-50 rounded-lg p-3 border border-blue-100 mb-3">
+                        <a href="https://github.com/alibaba/canal/releases" target="_blank" class="text-primary hover:text-primary/80 flex items-center font-medium">
+                            <i class="fa fa-external-link mr-2"></i>
+                            <span>Canal官方GitHub发布页面</span>
+                        </a>
+                    </div>
+                    <p class="text-secondary mb-3">使用wget命令下载最新版本（以Linux为例）：</p>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>wget https://github.com/alibaba/canal/releases/download/canal-1.1.8/canal.deployer-1.1.8.tar.gz</code></pre>
+                    </div>
+                </div>
+
+                <!-- 3.1.2 解压安装与目录说明 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">3.1.2 解压安装与目录说明</h4>
+                    
+                    <div class="mb-6">
+                        <h5 class="font-medium text-dark mb-2">Linux系统安装步骤</h5>
+                        <div class="bg-dark rounded-lg p-4 overflow-x-auto mb-4">
+                            <pre class="text-gray-300 text-sm"><code># 创建安装目录
+mkdir /opt/canal
+cd /opt/canal
+
+# 解压安装包
+tar zxvf /path/to/canal.deployer-1.1.8.tar.gz
+
+# 进入Canal目录
+cd canal.deployer-1.1.8</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h5 class="font-medium text-dark mb-2">Windows系统安装步骤</h5>
+                        <ol class="list-decimal list-inside space-y-2 text-secondary pl-2">
+                            <li>创建安装目录（例如D:\canal）</li>
+                            <li>解压下载的ZIP文件到该目录</li>
+                            <li>通过命令提示符或PowerShell进入安装目录</li>
+                        </ol>
+                    </div>
+
+                    <h5 class="font-medium text-dark mb-2">Canal目录结构</h5>
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>canal.deployer-1.1.8/
+├── bin/                  # 启动脚本目录
+├── conf/                 # 配置文件目录
+│   ├── canal.properties   # 全局配置文件
+│   ├── example/          # 示例instance配置目录
+│   │   └── instance.properties
+│   └── logback.xml       # 日志配置文件
+├── lib/                  # 依赖库目录
+├── logs/                 # 日志文件目录
+└── plugin/               # 插件目录</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.2 核心配置文件详解 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-file-text mr-2"></i>3.2 核心配置文件详解
+                </h3>
+
+                <!-- 3.2.1 canal.properties全局配置 -->
+                <div class="mb-8">
+                    <h4 class="font-semibold text-dark mb-3">3.2.1 canal.properties全局配置</h4>
+                    <p class="text-secondary mb-3">canal.properties是Canal的全局配置文件，包含了Canal Server的基本配置信息。以下是主要配置参数的说明：</p>
+                    
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto mb-4">
+                        <pre class="text-gray-300 text-sm"><code># Canal基本配置
+canal.id=1                   # 每个Canal Server实例的唯一标识
+canal.ip=                   # Canal Server绑定的本地IP地址，如果不配置，默认选择一个本机IP
+canal.port=11111            # Canal Server提供socket服务的端口
+canal.metrics.pull.port=11112 # 监控指标拉取端口，用于Prometheus监控
+canal.zkServers=            # Canal Server连接Zookeeper集群的地址（集群模式需要）
+
+# Canal运行模式配置
+canal.serverMode=tcp         # 可选值：tcp, kafka, RocketMQ
+canal.withoutNetty=false     # 是否禁用Netty，一般不需要修改
+
+# Canal Admin配置（如果启用Admin功能）
+canal.admin.port=11110       # Canal Admin端口
+canal.admin.user=admin       # 管理员用户名
+canal.admin.passwd=4ACFE3202A5FF5CF467898FC58AAB1D615029441  # 管理员密码（SHA-1加密）
+
+# 实例配置
+canal.destinations=example   # 指定实例名，多个实例用逗号分隔
+canal.instance.global.spring.xml=classpath:spring/default-instance.xml
+
+# 内存配置
+canal.instance.memory.buffer.size=16384    # 内存缓冲区大小，必须是2的幂
+canal.instance.memory.buffer.memunit=1024  # 内存单元大小，默认1KB
+canal.instance.memory.batch.mode=MEMSIZE   # 内存批次模式：MEMSIZE或ITEMSIZE</code></pre>
+                    </div>
+
+                    <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                        <h5 class="font-medium text-dark mb-1 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>重要提示
+                        </h5>
+                        <p class="text-sm text-secondary">canal.destinations参数指定了要启动的instance名称，多个instance用逗号分隔。例如，如果要监控两个数据库，可以配置为canal.destinations=db1,db2，然后在conf目录下创建db1和db2两个目录，并分别配置各自的instance.properties文件。</p>
+                    </div>
+                </div>
+
+                <!-- 3.2.2 instance.properties实例配置 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">3.2.2 instance.properties实例配置</h4>
+                    <p class="text-secondary mb-3">instance.properties是每个instance的具体配置文件，包含了连接MySQL数据库和数据解析的相关配置：</p>
+                    
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto mb-4">
+                        <pre class="text-gray-300 text-sm"><code># 基本配置
+canal.instance.mysql.slaveId=1234            # 必须配置，不能与MySQL的server_id重复
+canal.instance.master.address=127.0.0.1:3306  # MySQL主库地址和端口
+canal.instance.dbUsername=canal              # 数据库用户名
+canal.instance.dbPassword=canal              # 数据库密码
+canal.instance.defaultDatabaseName=          # 默认数据库名
+canal.instance.connectionCharset=UTF-8       # 连接字符集
+
+# 过滤配置
+canal.instance.filter.regex=.*\\..*          # 表过滤正则表达式
+canal.instance.filter.black.regex=           # 黑名单过滤正则表达式
+
+# 解析配置
+canal.instance.parser.parallel=false         # 是否开启并行解析
+canal.instance.parser.parallelThreadSize=16  # 并行解析线程数（仅当parallel=true时有效）
+canal.instance.parser.direct=false           # 是否直接解析（不建议修改）</code></pre>
+                    </div>
+
+                    <h5 class="font-medium text-dark mb-2">表过滤规则说明</h5>
+                    <div class="overflow-x-auto mb-4">
+                        <table class="min-w-full bg-white border border-light rounded-lg">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">过滤规则</th>
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">.*\\..*</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">匹配所有库的所有表</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">test\\..*</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">匹配test库的所有表</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">test\\.user</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">匹配test库的user表</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">test\\..*,demo\\..*</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">匹配test库和demo库的所有表</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark">test\\.user,test\\.order</td>
+                                    <td class="py-3 px-4 text-sm text-secondary">匹配test库的user表和order表</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <h5 class="font-medium text-yellow-800 mb-1 flex items-center">
+                            <i class="fa fa-exclamation-circle mr-2"></i>注意事项
+                        </h5>
+                        <p class="text-sm text-yellow-700">如果在配置文件中配置了过滤规则，就不应该在代码中调用CanalConnector.subscribe()方法，否则配置文件中的过滤配置会被覆盖。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.3 多instance配置与集群部署 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-clone mr-2"></i>3.3 多instance配置与集群部署
+                </h3>
+
+                <!-- 3.3.1 配置多个数据源 -->
+                <div class="mb-8">
+                    <h4 class="font-semibold text-dark mb-3">3.3.1 配置多个数据源</h4>
+                    <p class="text-secondary mb-3">如果需要监控多个MySQL数据库或同一个数据库的不同部分，可以通过配置多个instance来实现：</p>
+                    
+                    <ol class="list-decimal list-inside space-y-4 text-secondary pl-2 mb-6">
+                        <li>
+                            <p class="font-medium text-dark">修改全局配置文件</p>
+                            <p class="mb-2">编辑canal.properties，在canal.destinations参数中指定多个instance名称，用逗号分隔：</p>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>canal.destinations=db1,db2,db3</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <p class="font-medium text-dark">创建instance目录</p>
+                            <p>在conf目录下创建与instance名称对应的目录，例如db1、db2、db3。</p>
+                        </li>
+                        <li>
+                            <p class="font-medium text-dark">配置instance文件</p>
+                            <p class="mb-2">在每个instance目录下创建instance.properties文件，并配置相应的数据库连接信息和过滤规则。</p>
+                        </li>
+                    </ol>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="font-medium text-dark mb-2">db1实例配置（监控test数据库的user表）：</p>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>canal.instance.mysql.slaveId=1001
+canal.instance.master.address=192.168.1.100:3306
+canal.instance.dbUsername=canal
+canal.instance.dbPassword=canal
+canal.instance.defaultDatabaseName=test
+canal.instance.filter.regex=test\\.user</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-medium text-dark mb-2">db2实例配置（监控demo数据库的所有表）：</p>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>canal.instance.mysql.slaveId=1002
+canal.instance.master.address=192.168.1.101:3306
+canal.instance.dbUsername=canal
+canal.instance.dbPassword=canal
+canal.instance.defaultDatabaseName=demo
+canal.instance.filter.regex=demo\\..*</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.3.2 基于Zookeeper的高可用集群 -->
+                <div class="mb-8">
+                    <h4 class="font-semibold text-dark mb-3">3.3.2 基于Zookeeper的高可用集群</h4>
+                    <p class="text-secondary mb-3">Canal支持基于Zookeeper的高可用集群部署，通过Zookeeper实现主备切换和负载均衡。</p>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 border border-light mb-6">
+                        <h5 class="font-medium text-dark mb-2">集群部署架构</h5>
+                        <div class="flex flex-col items-center justify-center p-4 border border-light rounded-lg bg-white">
+                            <div class="flex flex-col items-center mb-4">
+                                <div class="bg-blue-100 text-primary px-4 py-2 rounded-lg mb-2">Canal A (Active)</div>
+                                <div class="bg-gray-100 text-secondary px-4 py-2 rounded-lg">Canal B (Standby)</div>
+                            </div>
+                            <div class="w-16 h-1 bg-gray-300 transform rotate-90 mb-4"></div>
+                            <div class="bg-green-100 text-green-700 px-6 py-3 rounded-lg">
+                                Zookeeper Cluster (3 nodes)
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="font-medium text-dark mb-2">集群部署关键步骤</h5>
+                    <ol class="list-decimal list-inside space-y-4 text-secondary pl-2 mb-6">
+                        <li>
+                            <p class="font-medium text-dark">部署Zookeeper集群</p>
+                            <ul class="list-disc list-inside space-y-1 text-sm pl-4 mt-1">
+                                <li>部署至少3个Zookeeper节点</li>
+                                <li>确保Zookeeper版本在3.4.6以上</li>
+                                <li>配置Zookeeper集群间的通信</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p class="font-medium text-dark">配置Canal Server</p>
+                            <p class="mb-2">在每个Canal Server的canal.properties中添加Zookeeper配置：</p>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>canal.zkServers=zk1:2181,zk2:2181,zk3:2181
+canal.serverMode=kafka  # 建议使用消息队列模式</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <p class="font-medium text-dark">配置instance</p>
+                            <p class="mb-2">在instance配置文件中添加集群相关配置：</p>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>canal.instance.global.spring.xml=classpath:spring/zk-instance.xml</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <p class="font-medium text-dark">启动集群</p>
+                            <ul class="list-disc list-inside space-y-1 text-sm pl-4 mt-1">
+                                <li>依次启动所有Canal Server节点</li>
+                                <li>通过Zookeeper选举机制，只有一个节点会成为Active状态</li>
+                                <li>其他节点处于Standby状态，等待Active节点故障时接管</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- 3.3.3 负载均衡与故障转移 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">3.3.3 负载均衡与故障转移</h4>
+                    
+                    <div class="mb-6">
+                        <h5 class="font-medium text-dark mb-2">负载均衡策略</h5>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                                <h6 class="font-medium text-dark mb-1">轮询策略</h6>
+                                <div class="bg-dark rounded-lg p-2 mb-2 overflow-x-auto">
+                                    <pre class="text-gray-300 text-xs"><code>canal.instance.loadbalance.strategy=round_robin</code></pre>
+                                </div>
+                                <p class="text-xs text-secondary">均匀分配instance到各个节点，适合数据量分布均匀的场景</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                                <h6 class="font-medium text-dark mb-1">权重策略</h6>
+                                <div class="bg-dark rounded-lg p-2 mb-2 overflow-x-auto">
+                                    <pre class="text-gray-300 text-xs"><code>canal.instance.loadbalance.strategy=weighted
+canal.instance.loadbalance.weight=10</code></pre>
+                                </div>
+                                <p class="text-xs text-secondary">根据权重分配instance，可根据节点性能设置不同权重</p>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                                <h6 class="font-medium text-dark mb-1">一致性哈希策略</h6>
+                                <div class="bg-dark rounded-lg p-2 mb-2 overflow-x-auto">
+                                    <pre class="text-gray-300 text-xs"><code>canal.instance.loadbalance.strategy=consistent_hashing</code></pre>
+                                </div>
+                                <p class="text-xs text-secondary">根据表名哈希分配到固定节点，适合相同表数据在同一节点处理</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h5 class="font-medium text-dark mb-2">故障转移机制</h5>
+                        <div class="bg-gray-50 rounded-lg p-4 border border-light">
+                            <ol class="list-decimal list-inside space-y-2 text-secondary pl-2 text-sm">
+                                <li>当Active节点故障时，Zookeeper会检测到节点消失</li>
+                                <li>Zookeeper触发选举机制，从Standby节点中选出新的Active节点</li>
+                                <li>新的Active节点接管故障节点的所有instance</li>
+                                <li>客户端会自动重连到新的Active节点</li>
+                                <li>整个故障转移过程通常在几秒内完成</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.4 启动运行与状态检查 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-play-circle mr-2"></i>3.4 启动运行与状态检查
+                </h3>
+
+                <!-- 3.4.1 启动命令与参数 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">3.4.1 启动命令与参数</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        <div>
+                            <h5 class="font-medium text-dark mb-2">Linux系统命令</h5>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code># 启动Canal服务
+sh bin/startup.sh
+
+# 停止Canal服务
+sh bin/stop.sh
+
+# 重启Canal服务
+sh bin/restart.sh
+
+# 查看服务状态
+sh bin/status.sh</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-medium text-dark mb-2">Windows系统命令</h5>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code># 启动Canal服务
+bin\startup.bat
+
+# 停止Canal服务
+bin\stop.bat
+
+# 查看服务状态
+bin\status.bat</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.4.2 日志文件与监控 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">3.4.2 日志文件与监控</h4>
+                    
+                    <p class="text-secondary mb-3">Canal的日志文件存放在logs目录下，主要包括：</p>
+                    
+                    <div class="overflow-x-auto mb-4">
+                        <table class="min-w-full bg-white border border-light rounded-lg">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">日志文件</th>
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">用途说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">canal.log</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">Canal Server的主要日志文件</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">example.log</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">example实例的日志文件（根据instance名称命名）</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark border-b border-light">canal_gc.log</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">JVM垃圾回收日志</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-mono text-dark">canal_stderr.log</td>
+                                    <td class="py-3 px-4 text-sm text-secondary">标准错误输出日志</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="text-secondary mb-2">查看实时日志：</p>
+                    <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>tail -f logs/canal.log
+tail -f logs/example.log</code></pre>
+                    </div>
+
+                    <div class="bg-blue-50 rounded-lg p-3 border border-blue-100 mt-4">
+                        <h5 class="font-medium text-dark mb-1 flex items-center">
+                            <i class="fa fa-lightbulb-o text-primary mr-2"></i>内存配置调整
+                        </h5>
+                        <p class="text-sm text-secondary">如果启动过程中出现内存不足的错误，可以通过修改bin/startup.sh文件中的JVM参数来调整内存配置：</p>
+                        <div class="bg-dark rounded-lg p-2 mt-2 overflow-x-auto">
+                            <pre class="text-gray-300 text-xs"><code>JAVA_OPTS="-server -Xms512m -Xmx512m -Xmn256m -XX:SurvivorRatio=2"</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3.4.3 常见启动问题处理 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">3.4.3 常见启动问题处理</h4>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 rounded-lg p-3 border border-light">
+                            <h5 class="font-medium text-dark mb-1 flex items-center">
+                                <i class="fa fa-exclamation-circle text-yellow-500 mr-2"></i>端口占用问题
+                            </h5>
+                            <p class="text-sm text-secondary mb-2">如果启动时报错端口已被占用，可以通过以下命令查看占用端口的进程：</p>
+                            <div class="bg-dark rounded-lg p-2 overflow-x-auto">
+                                <pre class="text-gray-300 text-xs"><code>lsof -i :11111</code></pre>
+                            </div>
+                            <p class="text-sm text-secondary mt-2">然后杀死对应的进程或修改Canal的端口配置。</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg p-3 border border-light">
+                            <h5 class="font-medium text-dark mb-1 flex items-center">
+                                <i class="fa fa-exclamation-circle text-yellow-500 mr-2"></i>连接数据库失败
+                            </h5>
+                            <ul class="list-disc list-inside space-y-1 text-sm text-secondary pl-2">
+                                <li>检查MySQL服务是否正常运行</li>
+                                <li>检查instance.properties中的数据库连接信息是否正确</li>
+                                <li>检查网络连接是否正常</li>
+                                <li>检查MySQL用户权限是否正确</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg p-3 border border-light">
+                            <h5 class="font-medium text-dark mb-1 flex items-center">
+                                <i class="fa fa-exclamation-circle text-yellow-500 mr-2"></i>binlog解析错误
+                            </h5>
+                            <ul class="list-disc list-inside space-y-1 text-sm text-secondary pl-2">
+                                <li>确保MySQL的binlog格式为ROW模式</li>
+                                <li>检查MySQL的server_id与Canal的slaveId是否重复</li>
+                                <li>检查binlog是否已开启</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spring Boot集成开发指南 -->
+        <section id="spring-boot" class="mb-16 scroll-mt-20">
+            <div class="bg-gradient-blue rounded-xl p-6 shadow-sm mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4 text-shadow">4. Spring Boot集成开发指南</h2>
+                <p class="text-secondary">本节详细介绍如何在Spring Boot项目中集成Canal客户端，实现MySQL数据同步功能。</p>
+            </div>
+
+            <!-- 4.1 项目依赖配置 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-code-fork mr-2"></i>4.1 项目依赖配置
+                </h3>
+
+                <!-- 4.1.1 Maven依赖配置 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">4.1.1 Maven依赖配置</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h5 class="font-medium text-dark mb-2">Spring Boot 2.x版本依赖</h5>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>&lt;dependencies&gt;
+    &lt;!-- Spring Boot Web Starter --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- Canal客户端依赖 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.otter&lt;/groupId&gt;
+        &lt;artifactId&gt;canal.client&lt;/artifactId&gt;
+        &lt;version&gt;1.1.7&lt;/version&gt;
+        &lt;exclusions&gt;
+            &lt;!-- 排除冲突的日志依赖 --&gt;
+            &lt;exclusion&gt;
+                &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+                &lt;artifactId&gt;logback-core&lt;/artifactId&gt;
+            &lt;/exclusion&gt;
+            &lt;exclusion&gt;
+                &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+                &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
+            &lt;/exclusion&gt;
+        &lt;/exclusions&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- Canal协议依赖（可选） --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.otter&lt;/groupId&gt;
+        &lt;artifactId&gt;canal.protocol&lt;/artifactId&gt;
+        &lt;version&gt;1.1.7&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="font-medium text-dark mb-2">Spring Boot 3.x版本依赖</h5>
+                            <div class="bg-dark rounded-lg p-3 overflow-x-auto">
+                                <pre class="text-gray-300 text-sm"><code>&lt;dependencies&gt;
+    &lt;!-- Spring Boot Web Starter --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- Canal客户端依赖 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.otter&lt;/groupId&gt;
+        &lt;artifactId&gt;canal.client&lt;/artifactId&gt;
+        &lt;version&gt;1.1.7&lt;/version&gt;
+        &lt;exclusions&gt;
+            &lt;!-- 排除冲突的日志依赖 --&gt;
+            &lt;exclusion&gt;
+                &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+                &lt;artifactId&gt;logback-core&lt;/artifactId&gt;
+            &lt;/exclusion&gt;
+            &lt;exclusion&gt;
+                &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+                &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
+            &lt;/exclusion&gt;
+        &lt;/exclusions&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- Spring Boot 3.x额外依赖 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-log4j2&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <h5 class="font-medium text-yellow-800 mb-1 flex items-center">
+                            <i class="fa fa-exclamation-triangle mr-2"></i>依赖冲突注意事项
+                        </h5>
+                        <p class="text-sm text-yellow-700">Canal客户端的日志依赖可能与Spring Boot的默认日志框架产生冲突，因此需要通过&lt;exclusions&gt;标签排除冲突的日志依赖，避免启动时出现日志相关的异常。</p>
+                    </div>
+                </div>
+
+                <!-- 4.1.2 版本兼容性说明 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">4.1.2 版本兼容性说明</h4>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-light rounded-lg">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">组件</th>
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">版本要求</th>
+                                    <th class="py-3 px-4 text-left text-sm font-semibold text-dark border-b border-light">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">Spring Boot 2.x</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">Canal 1.1.7+</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">推荐2.3.x以上版本</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">Spring Boot 3.x</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">Canal 1.1.7+</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">需要额外添加log4j2依赖</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark border-b border-light">Canal</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">最低1.1.4，推荐1.1.7+</td>
+                                    <td class="py-3 px-4 text-sm text-secondary border-b border-light">1.1.4+支持Admin动态运维</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm font-medium text-dark">JDK</td>
+                                    <td class="py-3 px-4 text-sm text-secondary">2.x需JDK 8+，3.x需JDK 17+</td>
+                                    <td class="py-3 px-4 text-sm text-secondary">遵循Spring Boot官方JDK要求</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.2 Canal客户端配置与连接 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-light">
+                <h3 class="text-xl md:text-2xl font-bold text-primary mb-4 flex items-center">
+                    <i class="fa fa-plug mr-2"></i>4.2 Canal客户端配置与连接
+                </h3>
+
+                <!-- 4.2.1 配置文件设置 -->
+                <div class="mb-6">
+                    <h4 class="font-semibold text-dark mb-3">4.2.1 配置文件设置</h4>
+                    <p class="text-secondary mb-3">在Spring Boot项目中，推荐使用application.yml文件配置Canal连接信息：</p>
+                    
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto mb-6">
+                        <pre class="text-gray-300 text-sm"><code>canal:
+  # Canal Server连接配置
+  server:
+    host: 127.0.0.1      # Canal Server主机地址
+    port: 11111          # Canal Server端口
+    destination: example  # instance名称
+    
+  # 认证信息（如果启用了认证）
+  username:             # 用户名（默认为空）
+  password:             # 密码（默认为空）
+  
+  # 连接池配置
+  pool:
+    max-active: 10       # 最大活跃连接数
+    max-idle: 5          # 最大空闲连接数
+    min-idle: 1          # 最小空闲连接数
+    timeout: 30000       # 连接超时时间（毫秒）
+    
+  # 订阅配置
+  subscribe: ".*\\..*"   # 订阅所有表的变更事件
+  filter-regex:          # 表过滤正则表达式（可选）
+  black-regex:           # 黑名单正则表达式（可选）</code></pre>
+                    </div>
+
+                    <p class="text-secondary mb-3">集群模式配置（多个Canal Server）：</p>
+                    
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>canal:
+  server:
+    cluster:
+      - host: 192.168.1.100
+        port: 11111
+      - host: 192.168.1.101
+        port: 11111
+      - host: 192.168.1.102
+        port: 11111
+    destination: example
+  # 其他配置同上...</code></pre>
+                    </div>
+                </div>
+
+                <!-- 4.2.2 连接工厂与配置类 -->
+                <div>
+                    <h4 class="font-semibold text-dark mb-3">4.2.2 连接工厂与配置类</h4>
+                    <p class="text-secondary mb-3">创建Canal连接工厂和配置类，用于管理Canal客户端连接：</p>
+                    
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto mb-6">
+                        <pre class="text-gray-300 text-sm"><code>import com.alibaba.otter.canal.client.CanalConnector;
+import com.alibaba.otter.canal.client.CanalConnectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.net.InetSocketAddress;
+import java.util.List;
+
+@Configuration
+@EnableConfigurationProperties(CanalProperties.class)
+public class CanalConfig {
+
+    @Autowired
+    private CanalProperties canalProperties;
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CanalConnector canalConnector() {
+        CanalConnector connector;
         
-        <div class="demo-section">
-            <h3>📝 表单交互</h3>
-            <input type="text" id="nameInput" placeholder="请输入您的姓名">
-            <button onclick="greetUser()">打招呼</button>
-            <div id="greeting" class="result hidden"></div>
-        </div>
+        // 判断是否为集群配置
+        if (canalProperties.getServer().getCluster() != null && 
+            !canalProperties.getServer().getCluster().isEmpty()) {
+            List&lt;InetSocketAddress&gt; addresses = canalProperties.getServer().getCluster().stream()
+                    .map(server -> new InetSocketAddress(server.getHost(), server.getPort()))
+                    .toList();
+            connector = CanalConnectors.newClusterConnector(addresses, 
+                    canalProperties.getServer().getDestination(),
+                    canalProperties.getUsername(),
+                    canalProperties.getPassword());
+        } else {
+            connector = CanalConnectors.newSingleConnector(
+                    new InetSocketAddress(canalProperties.getServer().getHost(), 
+                                         canalProperties.getServer().getPort()),
+                    canalProperties.getServer().getDestination(),
+                    canalProperties.getUsername(),
+                    canalProperties.getPassword());
+        }
+        
+        // 配置连接池参数
+        connector.setConnectTimeout(canalProperties.getPool().getTimeout());
+        connector.setSoTimeout(canalProperties.getPool().getTimeout());
+        
+        return connector;
+    }
+}</code></pre>
+                    </div>
 
-        <div class="demo-section">
-            <h3>🎨 动态样式</h3>
-            <button onclick="changeColor()">改变背景颜色</button>
-            <button onclick="toggleTheme()">切换主题</button>
-            <div id="colorDemo" style="width: 100%; height: 50px; background: #3498db; margin-top: 10px; border-radius: 5px;"></div>
-        </div>
+                    <p class="text-secondary mb-3">创建CanalProperties配置类，用于读取配置文件：</p>
+                    
+                    <div class="bg-dark rounded-lg p-4 overflow-x-auto">
+                        <pre class="text-gray-300 text-sm"><code>import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
-        <div class="demo-section">
-            <h3>📊 计算器</h3>
-            <input type="number" id="num1" placeholder="第一个数字">
-            <input type="number" id="num2" placeholder="第二个数字">
-            <br>
-            <button onclick="calculate('+')">加法</button>
-            <button onclick="calculate('-')">减法</button>
-            <button onclick="calculate('*')">乘法</button>
-            <button onclick="calculate('/')">除法</button>
-            <div id="calcResult" class="result hidden"></div>
-        </div>
+import java.util.List;
 
-        <div class="demo-section">
-            <h3>⏰ 实时时间</h3>
-            <button onclick="startClock()">开始时钟</button>
-            <button onclick="stopClock()">停止时钟</button>
-            <div id="clock" class="result">点击开始时钟查看当前时间</div>
-        </div>
+@Component
+@ConfigurationProperties(prefix = "canal")
+public class CanalProperties {
+    private String username;
+    private String password;
+    private CanalServerProperties server;
+    private CanalPoolProperties pool;
+    private String subscribe;
+    private String filterRegex;
+    private String blackRegex;
 
-        <div class="demo-section">
-            <h3>📋 待办事项</h3>
-            <input type="text" id="todoInput" placeholder="输入待办事项">
-            <button onclick="addTodo()">添加</button>
-            <ul id="todoList"></ul>
-        </div>
-    </div>
+    // Getters and Setters
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public CanalServerProperties getServer() { return server; }
+    public void setServer(CanalServerProperties server) { this.server = server; }
+    public CanalPoolProperties getPool() { return pool; }
+    public void setPool(CanalPoolProperties pool) { this.pool = pool; }
+    public String getSubscribe() { return subscribe; }
+    public void setSubscribe(String subscribe) { this.subscribe = subscribe; }
+    public String getFilterRegex() { return filterRegex; }
+    public void setFilterRegex(String filterRegex) { this.filterRegex = filterRegex; }
+    public String getBlackRegex() { return blackRegex; }
+    public void setBlackRegex(String blackRegex) { this.blackRegex = blackRegex; }
+}
 
+class CanalServerProperties {
+    private String host;
+    private int port;
+    private String destination;
+    private List&lt;CanalClusterServerProperties&gt; cluster;
+
+    // Getters and Setters
+    public String getHost() { return host; }
+    public void setHost(String host) { this.host = host; }
+    public int getPort() { return port; }
+    public void setPort(int port) { this.port = port; }
+    public String getDestination() { return destination; }
+    public void setDestination(String destination) { this.destination = destination; }
+    public List&lt;CanalClusterServerProperties&gt; getCluster() { return cluster; }
+    public void setCluster(List&lt;CanalClusterServerProperties&gt; cluster) { this.cluster = cluster; }
+}
+
+class CanalClusterServerProperties {
+    private String host;
+    private int port;
+
+    // Getters and Setters
+    public String getHost() { return host; }
+    public void setHost(String host) { this.host = host; }
+    public int getPort() { return port; }
+    public void setPort(int port) { this.port = port; }
+}
+
+class CanalPoolProperties {
+    private int maxActive;
+    private int maxIdle;
+    private int minIdle;
+    private int timeout;
+
+    // Getters and Setters
+    public int getMaxActive() { return maxActive; }
+    public void setMaxActive(int maxActive) { this.maxActive = maxActive; }
+    public int getMaxIdle() { return maxIdle; }
+    public void setMaxIdle(int maxIdle) { this.maxIdle = maxIdle; }
+    public int getMinIdle() { return minIdle; }
+    public void setMinIdle(int minIdle) { this.minIdle = minIdle; }
+    public int getTimeout() { return timeout; }
+    public void setTimeout(int timeout) { this.timeout = timeout; }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold flex items-center">
+                        <i class="fa fa-database mr-2"></i>
+                        <span>Canal集成指南</span>
+                    </h3>
+                    <p class="text-gray-400 mt-2">Canal在Spring Boot环境下的MySQL数据同步集成完整指南</p>
+                </div>
+                <div class="flex flex-col items-center md:items-end">
+                    <p class="text-gray-400">© 2025 数据同步技术文档</p>
+                    <p class="text-gray-500 text-sm mt-1">基于Canal 1.1.8版本编写</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-500 text-sm">
+                <p>本指南仅供学习和参考使用，具体实现请结合实际业务场景进行调整</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-6 right-6 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg opacity-0 transition-opacity duration-300 hover:bg-primary/90">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
     <script>
-        let clockInterval;
-        let isDarkTheme = false;
+        // 移动端菜单切换
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
 
-        function greetUser() {
-            const name = document.getElementById('nameInput').value;
-            const greeting = document.getElementById('greeting');
-            if (name.trim()) {
-                greeting.textContent = `你好，${name}！欢迎来到HTML演示页面！`;
-                greeting.classList.remove('hidden');
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动端菜单
+                document.getElementById('mobileMenu').classList.add('hidden');
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 返回顶部按钮
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.replace('opacity-0', 'opacity-100');
             } else {
-                alert('请输入您的姓名');
+                backToTopButton.classList.replace('opacity-100', 'opacity-0');
             }
-        }
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
 
-        function changeColor() {
-            const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            document.getElementById('colorDemo').style.background = randomColor;
-        }
-
-        function toggleTheme() {
-            const container = document.querySelector('.container');
-            if (isDarkTheme) {
-                container.style.background = 'white';
-                container.style.color = '#333';
-                isDarkTheme = false;
-            } else {
-                container.style.background = '#2c3e50';
-                container.style.color = 'white';
-                isDarkTheme = true;
-            }
-        }
-
-        function calculate(operation) {
-            const num1 = parseFloat(document.getElementById('num1').value);
-            const num2 = parseFloat(document.getElementById('num2').value);
-            const result = document.getElementById('calcResult');
-            
-            if (isNaN(num1) || isNaN(num2)) {
-                alert('请输入有效的数字');
-                return;
-            }
-            
-            let calcResult;
-            switch(operation) {
-                case '+':
-                    calcResult = num1 + num2;
-                    break;
-                case '-':
-                    calcResult = num1 - num2;
-                    break;
-                case '*':
-                    calcResult = num1 * num2;
-                    break;
-                case '/':
-                    if (num2 === 0) {
-                        alert('除数不能为零');
-                        return;
+        // 数据同步工具对比图表
+        const ctx = document.getElementById('toolComparisonChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['实时性', '资源占用', '多数据库支持', '易用性', '生态完善度', '扩展性'],
+                datasets: [
+                    {
+                        label: 'Canal',
+                        data: [9, 8, 5, 8, 9, 9],
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(37, 99, 235, 1)'
+                    },
+                    {
+                        label: 'Maxwell',
+                        data: [8, 7, 5, 7, 6, 7],
+                        backgroundColor: 'rgba(234, 179, 8, 0.2)',
+                        borderColor: 'rgba(234, 179, 8, 1)',
+                        pointBackgroundColor: 'rgba(234, 179, 8, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(234, 179, 8, 1)'
+                    },
+                    {
+                        label: 'Debezium',
+                        data: [7, 5, 9, 6, 8, 8],
+                        backgroundColor: 'rgba(22, 163, 74, 0.2)',
+                        borderColor: 'rgba(22, 163, 74, 1)',
+                        pointBackgroundColor: 'rgba(22, 163, 74, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(22, 163, 74, 1)'
                     }
-                    calcResult = num1 / num2;
-                    break;
+                ]
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 2
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                }
             }
-            
-            result.textContent = `计算结果: ${num1} ${operation} ${num2} = ${calcResult}`;
-            result.classList.remove('hidden');
-        }
+        });
 
-        function startClock() {
-            if (clockInterval) clearInterval(clockInterval);
-            clockInterval = setInterval(() => {
-                const now = new Date();
-                document.getElementById('clock').textContent = 
-                    `当前时间: ${now.toLocaleString('zh-CN')}`;
-            }, 1000);
-        }
-
-        function stopClock() {
-            if (clockInterval) {
-                clearInterval(clockInterval);
-                clockInterval = null;
-                document.getElementById('clock').textContent = '时钟已停止';
-            }
-        }
-
-        function addTodo() {
-            const input = document.getElementById('todoInput');
-            const todoList = document.getElementById('todoList');
-            const todoText = input.value.trim();
-            
-            if (todoText) {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${todoText}</span>
-                    <button onclick="this.parentElement.remove()" style="margin-left: 10px; background: #e74c3c;">删除</button>
-                `;
-                li.style.margin = '5px 0';
-                li.style.padding = '5px';
-                li.style.background = '#f0f0f0';
-                li.style.borderRadius = '3px';
-                todoList.appendChild(li);
-                input.value = '';
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.pageYOffset > 10) {
+                header.classList.add('shadow');
             } else {
-                alert('请输入待办事项内容');
+                header.classList.remove('shadow');
             }
-        }
+        });
 
-        // 页面加载完成后的初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('HTML演示页面加载完成！');
+        // 代码块复制功能
+        document.querySelectorAll('pre code').forEach(block => {
+            const pre = block.parentElement;
+            const copyButton = document.createElement('button');
+            copyButton.className = 'absolute top-2 right-2 bg-dark/70 hover:bg-dark text-white px-2 py-1 rounded text-xs';
+            copyButton.innerHTML = '<i class="fa fa-copy mr-1"></i>复制';
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    copyButton.innerHTML = '<i class="fa fa-check mr-1"></i>已复制';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="fa fa-copy mr-1"></i>复制';
+                    }, 2000);
+                });
+            });
+            pre.style.position = 'relative';
+            pre.appendChild(copyButton);
         });
     </script>
 </body>

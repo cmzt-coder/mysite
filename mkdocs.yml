@@ -185,6 +185,8 @@ extra_javascript:
   - mkdocs/javascripts/katex.js
   - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js
+  # [外部链接处理]
+  - mkdocs/javascripts/external-links.js
 extra_css:
   # [数学公式支持]
   # https://squidfunk.github.io/mkdocs-material/reference/math/#katex
