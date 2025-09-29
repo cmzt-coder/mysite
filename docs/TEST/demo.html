@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML演示页面</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .demo-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            border-radius: 3px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 HTML功能演示页面</h1>
+        
+        <div class="demo-section">
+            <h3>📝 表单交互</h3>
+            <input type="text" id="nameInput" placeholder="请输入您的姓名">
+            <button onclick="greetUser()">打招呼</button>
+            <div id="greeting" class="result hidden"></div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🎨 动态样式</h3>
+            <button onclick="changeColor()">改变背景颜色</button>
+            <button onclick="toggleTheme()">切换主题</button>
+            <div id="colorDemo" style="width: 100%; height: 50px; background: #3498db; margin-top: 10px; border-radius: 5px;"></div>
+        </div>
+
+        <div class="demo-section">
+            <h3>📊 计算器</h3>
+            <input type="number" id="num1" placeholder="第一个数字">
+            <input type="number" id="num2" placeholder="第二个数字">
+            <br>
+            <button onclick="calculate('+')">加法</button>
+            <button onclick="calculate('-')">减法</button>
+            <button onclick="calculate('*')">乘法</button>
+            <button onclick="calculate('/')">除法</button>
+            <div id="calcResult" class="result hidden"></div>
+        </div>
+
+        <div class="demo-section">
+            <h3>⏰ 实时时间</h3>
+            <button onclick="startClock()">开始时钟</button>
+            <button onclick="stopClock()">停止时钟</button>
+            <div id="clock" class="result">点击开始时钟查看当前时间</div>
+        </div>
+
+        <div class="demo-section">
+            <h3>📋 待办事项</h3>
+            <input type="text" id="todoInput" placeholder="输入待办事项">
+            <button onclick="addTodo()">添加</button>
+            <ul id="todoList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let clockInterval;
+        let isDarkTheme = false;
+
+        function greetUser() {
+            const name = document.getElementById('nameInput').value;
+            const greeting = document.getElementById('greeting');
+            if (name.trim()) {
+                greeting.textContent = `你好，${name}！欢迎来到HTML演示页面！`;
+                greeting.classList.remove('hidden');
+            } else {
+                alert('请输入您的姓名');
+            }
+        }
+
+        function changeColor() {
+            const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.getElementById('colorDemo').style.background = randomColor;
+        }
+
+        function toggleTheme() {
+            const container = document.querySelector('.container');
+            if (isDarkTheme) {
+                container.style.background = 'white';
+                container.style.color = '#333';
+                isDarkTheme = false;
+            } else {
+                container.style.background = '#2c3e50';
+                container.style.color = 'white';
+                isDarkTheme = true;
+            }
+        }
+
+        function calculate(operation) {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const result = document.getElementById('calcResult');
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                alert('请输入有效的数字');
+                return;
+            }
+            
+            let calcResult;
+            switch(operation) {
+                case '+':
+                    calcResult = num1 + num2;
+                    break;
+                case '-':
+                    calcResult = num1 - num2;
+                    break;
+                case '*':
+                    calcResult = num1 * num2;
+                    break;
+                case '/':
+                    if (num2 === 0) {
+                        alert('除数不能为零');
+                        return;
+                    }
+                    calcResult = num1 / num2;
+                    break;
+            }
+            
+            result.textContent = `计算结果: ${num1} ${operation} ${num2} = ${calcResult}`;
+            result.classList.remove('hidden');
+        }
+
+        function startClock() {
+            if (clockInterval) clearInterval(clockInterval);
+            clockInterval = setInterval(() => {
+                const now = new Date();
+                document.getElementById('clock').textContent = 
+                    `当前时间: ${now.toLocaleString('zh-CN')}`;
+            }, 1000);
+        }
+
+        function stopClock() {
+            if (clockInterval) {
+                clearInterval(clockInterval);
+                clockInterval = null;
+                document.getElementById('clock').textContent = '时钟已停止';
+            }
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const todoList = document.getElementById('todoList');
+            const todoText = input.value.trim();
+            
+            if (todoText) {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${todoText}</span>
+                    <button onclick="this.parentElement.remove()" style="margin-left: 10px; background: #e74c3c;">删除</button>
+                `;
+                li.style.margin = '5px 0';
+                li.style.padding = '5px';
+                li.style.background = '#f0f0f0';
+                li.style.borderRadius = '3px';
+                todoList.appendChild(li);
+                input.value = '';
+            } else {
+                alert('请输入待办事项内容');
+            }
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('HTML演示页面加载完成！');
+        });
+    </script>
+</body>
+</html>
