@@ -1,0 +1,9 @@
+#! 额外信息（extra）配置
+#- 常用于添加社交链接、版权信息、公告等
+#- 这些内容由主题在特定位置渲染（如页脚）
+extra:
+  social:
+    # 在页脚展示的社交链接列表
+    - name: GitHub | CMZT
+      icon: fontawesome/brands/github
+      link: https://github.com/cmzt-coder

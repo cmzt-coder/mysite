@@ -1,0 +1,21 @@
+#! 站点静态资源配置
+#- 引入额外的 JavaScript 与 CSS 文件以增强渲染效果
+#- 建议将自托管资源放在 `docs/mkdocs/` 下，外链资源需保证可用性
+extra_javascript:
+  # KaTeX 数学公式支持（核心与自动渲染）
+  - mkdocs/javascripts/katex.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js
+  # 外部链接新窗口打开等行为增强
+  - mkdocs/javascripts/external-links.js
+  # 鼠标点击烟花效果（示例自定义脚本）
+  - mkdocs/javascripts/fireworks.js
+extra_css:
+  # KaTeX 样式文件，配合上方 JS 生效
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css
+  # 自定义样式：隐藏页脚翻页
+  - mkdocs/css/no-footer.css
+  # 自定义样式：无序列表符号
+  - mkdocs/css/unordered-list-symbols.css
+  # 自定义样式：导航栏字体与样式
+  - mkdocs/css/nav-style.css

@@ -1,0 +1,32 @@
+#! Markdown 扩展配置（pymdown-extensions 等）
+#- 控制代码高亮、提示块、目录、数学公式等渲染效果
+#- 如需关闭某项扩展，可直接删除对应条目
+markdown_extensions:
+  # 数学公式（KaTeX 渲染，需配合 extra_javascript/extra_css）
+  - pymdownx.arithmatex:
+      generic: true
+  # 图片与元素属性扩展，允许在 Markdown 中使用 `{}` 添加属性
+  - attr_list
+  # 在 HTML 中嵌入 Markdown 片段
+  - md_in_html
+  # 目录与锚点；permalink 为每个标题生成固定锚链
+  - toc:
+      permalink: true
+  # 代码高亮与行号、语言标题；line_spans/pygments_lang_class 用于细化样式选择器
+  - pymdownx.highlight:
+      linenums: true
+      auto_title: true
+      line_spans: __span
+      pygments_lang_class: true
+  # 行内代码高亮（如 `==高亮==` 等）
+  - pymdownx.inlinehilite
+  # 代码片段包含（从外部文件引入片段）
+  - pymdownx.snippets
+  # 围栏代码块的增强（支持多层嵌套与多语言）
+  - pymdownx.superfences
+  # 提示块（Note, Tip, Warning 等）
+  - admonition
+  # 可折叠的详情块（与 admonition 结合）
+  - pymdownx.details
+  # 脚注支持（[^1] 语法）
+  - footnotes

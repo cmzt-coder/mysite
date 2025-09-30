@@ -1,0 +1,7 @@
+# 站点基础信息配置
+# - 这些字段用于页面标题、SEO 元数据与链接生成
+# - 修改后需运行 `python tools/mkdocs_merge.py` 重新生成 mkdocs.yml
+site_name: CMZT——编程之路
+site_url: https://cmzt-coder.github.io/mysite/
+site_author: CMZT
+site_description: CMZT的编程之路

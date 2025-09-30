@@ -1,0 +1,37 @@
+#! 导航结构配置
+#- 控制顶部与侧边栏的文档分组与顺序
+#- 仅包含文档路径与显示名称；不要在此处配置主题或插件
+nav:
+  - 首页: index.md
+  - 项目:
+      - PROJECT/index.md
+      - 网络资源搜索网站: PROJECT/web_search.md
+      - SSE Demo: PROJECT/sse_demo.md
+  - 技术:
+      - TECH/index.md      
+      # 前端文档分组
+      - 前端:
+          - TECH/Frontend/index.md
+          - React Hooks使用指南: TECH/Frontend/react_hooks.md
+          - Vue3 Composition API详解: TECH/Frontend/vue3_composition.md
+      # 后端文档分组
+      - 后端:
+          - TECH/Backend/index.md
+          - Spring Boot最佳实践: TECH/Backend/spring_boot_best_practices.md
+          - Node.js Express框架入门: TECH/Backend/nodejs_express.md
+      # AI 文档分组
+      - AI:
+          - TECH/AI/index.md
+          - 机器学习基础: TECH/AI/machine_learning_basics.md
+          - 深度学习框架对比: TECH/AI/deep_learning_frameworks.md
+  - 面试:
+      - INTERVIEW/index.md
+  - 随笔:
+      - ESSAY/index.md
+  - 测试:
+      - TEST/index.md
+      - HTML演示页面: TEST/demo.html
+  - 转载:
+      - REPOST/index.md
+      - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
+      - Git工作流最佳实践指南: REPOST/git_workflow_guide.md

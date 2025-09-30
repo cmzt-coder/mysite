@@ -1,0 +1,6 @@
+#! 仓库与在线编辑相关配置
+#- 在右上角显示仓库链接与名称
+#- edit_uri 控制“在 GitHub 上编辑此页”的跳转路径
+edit_uri: edit/main/docs/
+repo_url: https://github.com/cmzt-coder/mysite
+repo_name: mysite

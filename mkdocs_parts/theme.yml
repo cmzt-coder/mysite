@@ -1,0 +1,38 @@
+#! 主题与外观设置
+#- 使用 Material 主题并开启常用交互特性
+#- 颜色与特性会影响站点 UI 展示
+theme:
+  name: material
+  palette:
+    # 日间模式（默认）配色方案
+    - scheme: default
+      primary: indigo
+      accent: orange
+      toggle:
+        icon: material/weather-night
+        name: 切换至夜间模式
+    # 夜间模式（暗色）配色方案
+    - scheme: slate
+      primary: indigo
+      accent: orange
+      toggle:
+        icon: material/weather-sunny
+        name: 切换至日间模式
+  features:
+    # 顶部 Tab 导航
+    - navigation.tabs
+    # 返回顶部按钮
+    - navigation.top
+    # 为分组添加索引页面（index.md）
+    - navigation.indexes
+    # 左侧目录默认展开
+    - navigation.expand
+    # 搜索词推荐与高亮
+    - search.suggest
+    - search.highlight
+    # 代码块复制按钮
+    - content.code.copy
+  language: zh
+  icon:
+    # 顶部右侧仓库图标
+    repo: fontawesome/brands/github
