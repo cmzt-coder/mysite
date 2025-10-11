@@ -19,6 +19,7 @@ nav:
           - TECH/Backend/index.md
           - Spring Boot最佳实践: TECH/Backend/spring_boot_best_practices.md
           - Node.js Express框架入门: TECH/Backend/nodejs_express.md
+          - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.md
       # AI 文档分组
       - AI:
           - TECH/AI/index.md
@@ -28,9 +29,10 @@ nav:
       - INTERVIEW/index.md
   - 随笔:
       - ESSAY/index.md
-  - 测试:
+  - HTML:
       - TEST/index.md
       - HTML演示页面: TEST/demo.html
+      - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
   - 转载:
       - REPOST/index.md
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
