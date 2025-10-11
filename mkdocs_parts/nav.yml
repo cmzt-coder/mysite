@@ -32,6 +32,7 @@ nav:
   - 测试:
       - TEST/index.md
       - Canal集成指南: TEST/Canal集成指南.html
+      - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
   - 转载:
       - REPOST/index.md
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
