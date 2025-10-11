@@ -29,10 +29,9 @@ nav:
       - INTERVIEW/index.md
   - 随笔:
       - ESSAY/index.md
-  - HTML:
+  - 测试:
       - TEST/index.md
-      - HTML演示页面: TEST/demo.html
-      - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
+      - Canal集成指南: TEST/Canal集成指南.html
   - 转载:
       - REPOST/index.md
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
