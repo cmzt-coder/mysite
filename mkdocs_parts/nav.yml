@@ -29,11 +29,16 @@ nav:
       - INTERVIEW/index.md
   - 随笔:
       - ESSAY/index.md
-  - 测试:
-      - TEST/index.md
-      - Canal集成指南: TEST/Canal集成指南.html
-      - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
+  - 工具:
+      - Utils/index.md
+      - Homebrew 简介及常用命令大全: Utils/Homebrew 简介及常用命令大全.md
+      - IDEA安装使用教程: Utils/IDEA安装使用教程.md
+      - Docker简介及常用命令: Utils/Docker简介及常用命令.md
+      - MacOS系统安装Navicat详细教程: Utils/MacOS系统安装Navicat详细教程.md
+      - Trae国际版简介及常用配置: Utils/Trae国际版简介及常用配置.md
+      - nvm简介及常用命令: Utils/nvm简介及常用命令.md
   - 转载:
       - REPOST/index.md
+      - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
       - Git工作流最佳实践指南: REPOST/git_workflow_guide.md
