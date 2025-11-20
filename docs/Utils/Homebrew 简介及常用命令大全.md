@@ -1,8 +1,8 @@
 # Homebrew 简介及常用命令大全
 
-# 一、Homebrew 核心简介
+## 一、Homebrew 核心简介
 
-## 1.1 什么是 Homebrew？
+### 1.1 什么是 Homebrew？
 
 Homebrew 是一款 **免费开源的包管理器** ，核心使命是“将 Apple 没有预装但你需要的东西装给你”，专为 macOS 设计，同时兼容 Linux 系统（Linux 环境下称为 Linuxbrew）。它彻底解决了 macOS 自带工具链版本老旧、软件安装分散、依赖管理复杂等问题，通过命令行即可实现软件的一键安装、更新、卸载与维护。
 
@@ -15,9 +15,9 @@ Homebrew 是一款 **免费开源的包管理器** ，核心使命是“将 Appl
 
  **官方网站** ：[https://brew.sh/zh-cn/](https://brew.sh/zh-cn/)
 
-## 1.2 安装 Homebrew
+### 1.2 安装 Homebrew
 
-### 1.2.1 前置条件
+#### 1.2.1 前置条件
 
 macOS 系统需先安装 Xcode 命令行工具（无需完整安装 Xcode），终端执行：
 
@@ -25,7 +25,7 @@ macOS 系统需先安装 Xcode 命令行工具（无需完整安装 Xcode），�
 xcode-select --install
 ```
 
-### 1.2.2 官方安装命令
+#### 1.2.2 官方安装命令
 
 打开终端，复制以下命令并回车，脚本执行前会明确说明操作内容：
 
@@ -35,7 +35,7 @@ xcode-select --install
 
 安装完成后，根据终端提示将 Homebrew 路径添加到 `~/.zshrc` 或 `~/.bash_profile` 中，确保命令全局可用。
 
-### 1.2.3 国内镜像加速安装（可选）
+#### 1.2.3 国内镜像加速安装（可选）
 
 若访问 GitHub 速度较慢，可使用国内 Gitee 镜像源，安装命令如下：
 
@@ -43,7 +43,7 @@ xcode-select --install
 /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
 ```
 
-### 1.2.4 安装验证
+#### 1.2.4 安装验证
 
 输入以下命令，若显示 Homebrew 版本号则安装成功：
 
@@ -51,18 +51,18 @@ xcode-select --install
 brew -v
 ```
 
-## 1.3 卸载 Homebrew
+### 1.3 卸载 Homebrew
 
 如需彻底卸载，执行官方卸载脚本或国内镜像卸载脚本：
 
 * 官方卸载：`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"`
 * 国内镜像卸载：`/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/HomebrewUninstall.sh)"`
 
-# 二、Homebrew 常用核心命令
+## 二、Homebrew 常用核心命令
 
 以下命令涵盖包管理、更新维护、服务控制等核心场景，表格中“示例”列可直接复制执行。
 
-## 2.1 基础包管理命令
+### 2.1 基础包管理命令
 
 用于软件包的安装、卸载、查询等基础操作，是日常使用频率最高的命令集合。
 
@@ -83,7 +83,7 @@ brew -v
 - `brew search --desc <关键词>` 按包描述精准搜索，适合场景化需求
   - 示例: `brew search --desc "web server"`（搜索 Web 服务器）
 
-## 2.2 包更新与版本控制
+### 2.2 包更新与版本控制
 
 确保 Homebrew 仓库及已安装软件处于最新状态，支持版本锁定避免意外升级。
 
@@ -100,7 +100,7 @@ brew -v
 - `brew outdated` 列出所有可升级的包及当前版本、最新版本
   - 示例: `brew outdated`
 
-## 2.3 Homebrew 自身管理与诊断
+### 2.3 Homebrew 自身管理与诊断
 
 用于查看 Homebrew 状态、配置信息及排查问题，是故障处理的核心命令。
 
@@ -111,7 +111,7 @@ brew -v
 - `brew config` 查看 Homebrew 配置信息（安装路径、镜像源、系统环境等）
   - 示例: `brew config`
 
-## 2.4 缓存清理（释放磁盘空间）
+### 2.4 缓存清理（释放磁盘空间）
 
 Homebrew 会保留软件旧版本和安装缓存，定期清理可释放大量磁盘空间。
 
@@ -126,7 +126,7 @@ Homebrew 会保留软件旧版本和安装缓存，定期清理可释放大量�
 - `brew autoremove` 卸载不再被其他包依赖的“孤儿包”，类似 `apt autoremove`
   - 示例: `brew autoremove`
 
-## 2.5 服务管理（brew services）
+### 2.5 服务管理（brew services）
 
 针对 `nginx`、`mysql`、`redis` 等后台服务，提供启动、停止、自启配置等功能，类似 Linux 的 `systemd`。
 
@@ -143,7 +143,7 @@ Homebrew 会保留软件旧版本和安装缓存，定期清理可释放大量�
 - `brew services list` 查看所有服务的运行状态（启动/停止/自启状态）
   - 示例: `brew services list`
 
-## 2.6 图形化应用管理（brew cask）
+### 2.6 图形化应用管理（brew cask）
 
 Homebrew Cask 是扩展功能，专门用于安装 macOS 图形化桌面应用（如浏览器、编辑器等），命令逻辑与基础包管理一致，仅需添加 `--cask` 参数。
 
@@ -156,7 +156,7 @@ Homebrew Cask 是扩展功能，专门用于安装 macOS 图形化桌面应用�
 - 列出已安装的图形化应用: `brew list --cask`
   - 示例: `brew list --cask`
 
-## 2.7 高级实用命令
+### 2.7 高级实用命令
 
 适用于依赖分析、路径查询等进阶场景，助力高效管理软件包。
 
@@ -171,9 +171,9 @@ Homebrew Cask 是扩展功能，专门用于安装 macOS 图形化桌面应用�
 - `brew audit <包名>` 检查包是否存在安全漏洞或合规问题
   - 示例: `brew audit --strict mysql`（严格检查 MySQL）
 
-# 三、日常使用最佳实践与注意事项
+## 三、日常使用最佳实践与注意事项
 
-## 3.1 常用操作流
+### 3.1 常用操作流
 
 日常更新所有软件的推荐流程（确保安全且高效）：
 
@@ -197,14 +197,14 @@ brew doctor
 brew update && brew upgrade && brew cleanup
 ```
 
-## 3.2 核心注意事项
+### 3.2 核心注意事项
 
 * **权限问题** ：Homebrew 设计为非 root 用户使用，**`sudo brew`****禁止使用 ** 执行命令，否则会导致权限混乱，后续操作报错。
 * **Linux 适配** ：Linuxbrew 默认安装路径为 `~/.linuxbrew`，需手动将路径加入环境变量：`echo 'export PATH="$HOME/.linuxbrew/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc`
 * **版本兼容** ：部分软件支持多版本共存（如 `python@3.9`、`python@3.11`），安装时需指定完整版本号，避免版本冲突。
 * **镜像源维护** ：若使用国内镜像源，后续更新时建议同步更新镜像配置，避免出现仓库不一致问题（参考各镜像站官方文档）。
 
-# 四、参考资源
+## 四、参考资源
 
 * Homebrew 官方文档：[https://docs.brew.sh/](https://docs.brew.sh/)
 * Homebrew Cask 官方文档：[https://docs.brew.sh/Cask-Cookbook](https://docs.brew.sh/Cask-Cookbook)
