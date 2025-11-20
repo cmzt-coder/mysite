@@ -37,6 +37,7 @@ nav:
       - MacOS系统安装Navicat详细教程: Utils/MacOS系统安装Navicat详细教程.md
       - Trae国际版简介及常用配置: Utils/Trae国际版简介及常用配置.md
       - nvm简介及常用命令: Utils/nvm简介及常用命令.md
+      - Docker部署MySQL8.0与Redis（含RediSearch）操作手册: Utils/Docker部署MySQL8.0与Redis（含RediSearch）操作手册.md
   - 转载:
       - REPOST/index.md
       - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
