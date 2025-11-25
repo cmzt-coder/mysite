@@ -38,6 +38,7 @@ nav:
       - Trae国际版简介及常用配置: Utils/Trae国际版简介及常用配置.md
       - nvm简介及常用命令: Utils/nvm简介及常用命令.md
       - Docker部署MySQL8.0与Redis（含RediSearch）操作手册: Utils/Docker部署MySQL8.0与Redis（含RediSearch）操作手册.md
+      - Chroma向量数据库：全面介绍与详细安装使用指南: Utils/Chroma向量数据库：全面介绍与详细安装使用指南.md
   - 转载:
       - REPOST/index.md
       - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
