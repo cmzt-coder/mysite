@@ -34,6 +34,7 @@
 - 自定义脚本与样式：
   - 建议将 JS/CSS 放置于 `docs/mkdocs/` 子目录中并在 `assets.yml` 引用。
   - 外链资源需确保长期可用性。
+- 命名规范：`docs/` 下文件与目录建议使用英文小写 + 短横线分隔，避免空格、全角标点及特殊字符，详见 `docs/PROJECT/naming-conventions.md`。
 
 ## 常见问题
 - 预览日志出现“未识别的相对链接”提示：请在 `docs/index.md` 或对应文档中将目录链接调整为具体页面（例如 `TECH/` 改为 `TECH/index.md`）。

@@ -5,6 +5,7 @@ nav:
   - 首页: index.md
   - 项目:
       - PROJECT/index.md
+      - 命名规范: PROJECT/naming-conventions.md
       - 网络资源搜索网站: PROJECT/web_search.md
       - SSE Demo: PROJECT/sse_demo.md
   - 技术:
@@ -19,7 +20,7 @@ nav:
           - TECH/Backend/index.md
           - Spring Boot最佳实践: TECH/Backend/spring_boot_best_practices.md
           - Node.js Express框架入门: TECH/Backend/nodejs_express.md
-          - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.md
+          - ThreadLocal 指南: TECH/Backend/threadlocal-guide.md
       # AI 文档分组
       - AI:
           - TECH/AI/index.md
@@ -31,17 +32,17 @@ nav:
       - ESSAY/index.md
   - 工具:
       - Utils/index.md
-      - Homebrew 简介及常用命令大全: Utils/Homebrew 简介及常用命令大全.md
-      - IDEA安装使用教程: Utils/IDEA安装使用教程.md
-      - Docker简介及常用命令: Utils/Docker简介及常用命令.md
-      - MacOS系统安装Navicat详细教程: Utils/MacOS系统安装Navicat详细教程.md
-      - Trae国际版简介及常用配置: Utils/Trae国际版简介及常用配置.md
-      - Conda简介及常用命令: Utils/Conda简介及常用命令.md
-      - nvm简介及常用命令: Utils/nvm简介及常用命令.md
-      - Docker部署MySQL8.0与Redis（含RediSearch）操作手册: Utils/Docker部署MySQL8.0与Redis（含RediSearch）操作手册.md
-      - Chroma向量数据库：全面介绍与详细安装使用指南: Utils/Chroma向量数据库：全面介绍与详细安装使用指南.md
+      - Homebrew 常用命令: Utils/homebrew-common-commands.md
+      - Docker 常用命令: Utils/docker-common-commands.md
+      - IDEA 安装教程: Utils/idea-installation-guide.md
+      - macOS Navicat 安装: Utils/macos-navicat-installation-guide.md
+      - Trae 配置指南: Utils/trae-international-config-guide.md
+      - Conda 常用命令: Utils/conda-common-commands.md
+      - nvm 常用命令: Utils/nvm-common-commands.md
+      - Docker 部署 MySQL8 & Redis: Utils/docker-mysql8-redis-deployment-guide.md
+      - Chroma 向量库指南: Utils/chroma-vector-database-guide.md
   - 转载:
       - REPOST/index.md
-      - ThreadLocal 详解: TECH/Backend/ThreadLocal 详解.html
+      - ThreadLocal 指南: TECH/Backend/threadlocal-guide.html
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
       - Git工作流最佳实践指南: REPOST/git_workflow_guide.md

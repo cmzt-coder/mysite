@@ -4,13 +4,15 @@
 
 ## 文档列表
 
-- [Homebrew 简介及常用命令大全](Homebrew 简介及常用命令大全.md)
-- [Docker简介及常用命令](Docker简介及常用命令.md)
-- [IDEA安装使用教程](IDEA安装使用教程.md)
-- [MacOS系统安装Navicat详细教程](MacOS系统安装Navicat详细教程.md)
-- [Trae国际版简介及常用配置](Trae国际版简介及常用配置.md)
-- [Conda简介及常用命令](Conda简介及常用命令.md)
-- [nvm简介及常用命令](nvm简介及常用命令.md)
+- [Homebrew 常用命令](homebrew-common-commands.md)
+- [Docker 常用命令](docker-common-commands.md)
+- [IDEA 安装教程](idea-installation-guide.md)
+- [macOS Navicat 安装](macos-navicat-installation-guide.md)
+- [Trae 配置指南](trae-international-config-guide.md)
+- [Conda 常用命令](conda-common-commands.md)
+- [nvm 常用命令](nvm-common-commands.md)
+- [Docker 部署 MySQL8 & Redis](docker-mysql8-redis-deployment-guide.md)
+- [Chroma 向量库指南](chroma-vector-database-guide.md)
 
 ## 使用说明
 
