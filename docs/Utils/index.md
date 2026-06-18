@@ -9,6 +9,7 @@
 - [IDEA安装使用教程](IDEA安装使用教程.md)
 - [MacOS系统安装Navicat详细教程](MacOS系统安装Navicat详细教程.md)
 - [Trae国际版简介及常用配置](Trae国际版简介及常用配置.md)
+- [Conda简介及常用命令](Conda简介及常用命令.md)
 - [nvm简介及常用命令](nvm简介及常用命令.md)
 
 ## 使用说明
