@@ -11,6 +11,7 @@
 - [Trae 配置指南](trae-international-config-guide.md)
 - [Conda 常用命令](conda-common-commands.md)
 - [nvm 常用命令](nvm-common-commands.md)
+- [MinerU 学习笔记](mineru/index.md)
 - [Docker 部署 MySQL8 & Redis](docker-mysql8-redis-deployment-guide.md)
 - [Chroma 向量库指南](chroma-vector-database-guide.md)
 
