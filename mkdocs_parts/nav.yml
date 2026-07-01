@@ -6,8 +6,10 @@ nav:
   - 项目:
       - PROJECT/index.md
       - 命名规范: PROJECT/naming-conventions.md
-      - 网络资源搜索网站: PROJECT/web_search.md
-      - SSE Demo: PROJECT/sse_demo.md
+      - 大模型知识库:
+          - PROJECT/llm-knowledge-base/index.md
+          - 切分与合并参数简单评估方式: PROJECT/llm-knowledge-base/splitting-and-merging-params-evaluation.md
+          - Markdown 与 HTML 表格处理方案: PROJECT/llm-knowledge-base/markdown-table-handling.md
   - 技术:
       - TECH/index.md      
       # 前端文档分组
