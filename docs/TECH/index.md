@@ -56,6 +56,19 @@
 
 ---
 
+## 🐍 Python
+
+Python 是后端开发、数据分析与自动化脚本中最常用的语言之一。本分类用于沉淀日常编码中的基础与进阶要点，便于持续复盘与查阅。
+
+### 文档列表
+
+- [01_python基础积累](Python/01-python-basics.md)
+- [02_python进阶积累](Python/02-python-advanced.md)
+
+[👉 查看更多 Python 内容](Python/index.md)
+
+---
+
 ## 🎯 学习路径建议
 
 ### 前端开发者

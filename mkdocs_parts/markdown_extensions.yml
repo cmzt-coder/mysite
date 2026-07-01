@@ -2,6 +2,7 @@
 #- 控制代码高亮、提示块、目录、数学公式等渲染效果
 #- 如需关闭某项扩展，可直接删除对应条目
 markdown_extensions:
+  - meta
   # 数学公式（KaTeX 渲染，需配合 extra_javascript/extra_css）
   - pymdownx.arithmatex:
       generic: true

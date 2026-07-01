@@ -26,6 +26,10 @@ nav:
           - TECH/AI/index.md
           - 机器学习基础: TECH/AI/machine_learning_basics.md
           - 深度学习框架对比: TECH/AI/deep_learning_frameworks.md
+      - Python:
+          - TECH/Python/index.md
+          - 01_python基础积累: TECH/Python/01-python-basics.md
+          - 02_python进阶积累: TECH/Python/02-python-advanced.md
   - 面试:
       - INTERVIEW/index.md
   - 随笔:
