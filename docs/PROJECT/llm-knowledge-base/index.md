@@ -6,4 +6,4 @@
 
 - [切分与合并参数简单评估方式](splitting-and-merging-params-evaluation.md)
 - [Markdown 与 HTML 表格处理方案](markdown-table-handling.md)
-
+- [商品名确认阈值微调](item-name-threshold-tuning/index.md)
