@@ -45,6 +45,7 @@ nav:
       - Trae 配置指南: Utils/trae-international-config-guide.md
       - Conda 常用命令: Utils/conda-common-commands.md
       - nvm 常用命令: Utils/nvm-common-commands.md
+      - Ollama 常用命令: Utils/ollama-common-commands.md
       - MinerU:
           - Utils/mineru/index.md
           - 架构解析: Utils/mineru/mineru-architecture.md
