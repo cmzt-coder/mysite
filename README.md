@@ -40,4 +40,4 @@
 - 单词之间使用短横线 `-` 分隔
 - 禁止空格、全角中文标点及其他特殊字符
 
-详细规范见：`docs/PROJECT/naming-conventions.md`
+详细规范见：`docs/naming-conventions.md`
