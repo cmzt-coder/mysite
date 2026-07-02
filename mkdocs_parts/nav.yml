@@ -35,10 +35,22 @@ nav:
       - 知识汇总:
           - TECH/knowledge-summary/index.md
           - CORS跨域配置: TECH/knowledge-summary/cors-cross-origin-configuration.md
+  - 提示词:
+      - PROMPTS/index.md
+      - 通用:
+          - PROMPTS/general/index.md
+          - 会议纪要提炼: PROMPTS/general/meeting-summary.md
+      - 编程:
+          - PROMPTS/coding/index.md
+          - 代码审查: PROMPTS/coding/code-review.md
+      - 写作:
+          - PROMPTS/writing/index.md
+          - 技术文章润色: PROMPTS/writing/tech-polish.md
   - 面试:
       - INTERVIEW/index.md
-  - 随笔:
-      - ESSAY/index.md
+      - 20260702阿里云:
+          - INTERVIEW/20260702-alibabacloud/index.md
+          - 面试记录: INTERVIEW/20260702-alibabacloud/interview-notes.md
   - 工具:
       - Utils/index.md
       - Homebrew 常用命令: Utils/homebrew-common-commands.md

@@ -56,8 +56,8 @@
 
 - 🔧 技术（TECH）：前端/后端/AI 等专题分享（[进入](TECH/index.md)）
 - 💼 项目（PROJECT）：实践案例与经验复盘（[进入](PROJECT/index.md)）
-- ✍️ 随笔（ESSAY）：生活与思考随记（[进入](ESSAY/index.md)）
 - 💡 面试（INTERVIEW）：知识点汇总与经验建议（[进入](INTERVIEW/index.md)）
+- 🧩 提示词（PROMPTS）：可复用的提示词模板与示例（[进入](PROMPTS/index.md)）
 - 📄 转载（REPOST）：精选高质量内容合集（[进入](REPOST/index.md)）
 - 🛠️ 工具（Utils）：开发工具与安装配置手册（[进入](Utils/index.md)）
 
