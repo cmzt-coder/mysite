@@ -32,6 +32,9 @@ nav:
           - TECH/Python/index.md
           - 01_python基础积累: TECH/Python/01-python-basics.md
           - 02_python进阶积累: TECH/Python/02-python-advanced.md
+      - 知识汇总:
+          - TECH/knowledge-summary/index.md
+          - CORS跨域配置: TECH/knowledge-summary/cors-cross-origin-configuration.md
   - 面试:
       - INTERVIEW/index.md
   - 随笔:
