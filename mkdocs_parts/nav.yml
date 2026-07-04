@@ -10,7 +10,7 @@ nav:
       - 大模型知识库:
           - PROJECT/llm-knowledge-base/index.md
           - 切分与合并参数简单评估方式: PROJECT/llm-knowledge-base/splitting-and-merging-params-evaluation.md
-          - md与HTML表格处理方案: PROJECT/llm-knowledge-base/markdown-table-handling.md
+          - Markdown与HTML表格处理方案: PROJECT/llm-knowledge-base/markdown-table-handling.md
           - 商品名确认阈值微调:
               - PROJECT/llm-knowledge-base/item-name-threshold-tuning/index.md
   - 技术:
