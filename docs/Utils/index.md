@@ -12,6 +12,7 @@
 - [Conda 常用命令](conda-common-commands.md)
 - [nvm 常用命令](nvm-common-commands.md)
 - [Ollama 常用命令](ollama-common-commands.md)
+- [Milvus 检索体系](milvus-search/index.md)
 - [MinerU 学习笔记](mineru/index.md)
 - [Docker 部署 MySQL8 & Redis](docker-mysql8-redis-deployment-guide.md)
 - [Chroma 向量库指南](chroma-vector-database-guide.md)

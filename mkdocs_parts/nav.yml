@@ -10,9 +10,12 @@ nav:
       - 大模型知识库:
           - PROJECT/llm-knowledge-base/index.md
           - 切分与合并参数简单评估方式: PROJECT/llm-knowledge-base/splitting-and-merging-params-evaluation.md
-          - Markdown与HTML表格处理方案: PROJECT/llm-knowledge-base/markdown-table-handling.md
+          - MD与HTML表格处理方案: PROJECT/llm-knowledge-base/markdown-table-handling.md
           - 商品名确认阈值微调:
               - PROJECT/llm-knowledge-base/item-name-threshold-tuning/index.md
+          - RAG 优化技术:
+              - PROJECT/llm-knowledge-base/rag-optimization-techniques/index.md
+              - 高级 RAG 增强技术全面解析: PROJECT/llm-knowledge-base/rag-optimization-techniques/advanced-rag-enhancement-techniques.md
   - 技术:
       - TECH/index.md      
       # 前端文档分组
@@ -64,6 +67,9 @@ nav:
       - Conda 常用命令: Utils/conda-common-commands.md
       - nvm 常用命令: Utils/nvm-common-commands.md
       - Ollama 常用命令: Utils/ollama-common-commands.md
+      - Milvus 检索体系:
+          - Utils/milvus-search/index.md
+          - Milvus 检索体系全解: Utils/milvus-search/milvus-search-system-guide.md
       - MinerU:
           - Utils/mineru/index.md
           - 架构解析: Utils/mineru/mineru-architecture.md
