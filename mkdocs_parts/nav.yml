@@ -59,6 +59,11 @@ nav:
           - 面试记录: INTERVIEW/20260702-alibabacloud/interview-notes.md
   - 工具:
       - Utils/index.md
+      - Claude:
+          - Utils/claude/index.md
+          - Claude Code 使用手册: Utils/claude/claude-code-user-manual.md
+          - Claude Code 命令大全（交互式）: Utils/claude/claude-code-interactive-commands.md
+          - Claude Code 提示词: Utils/claude/claude-code-prompts.md
       - Homebrew 常用命令: Utils/homebrew-common-commands.md
       - Docker 常用命令: Utils/docker-common-commands.md
       - IDEA 安装教程: Utils/idea-installation-guide.md
