@@ -5,6 +5,7 @@
 ## 文档列表
 
 - [Claude](claude/index.md)
+- [GSD 命令指南](gsd-claude-code-command-guide.md)
 - [Homebrew 常用命令](homebrew-common-commands.md)
 - [Docker 常用命令](docker-common-commands.md)
 - [IDEA 安装教程](idea-installation-guide.md)
