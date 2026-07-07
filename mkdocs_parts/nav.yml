@@ -91,6 +91,6 @@ nav:
       - Chroma 向量库指南: Utils/chroma-vector-database-guide.md
   - 转载:
       - REPOST/index.md
-      - ThreadLocal 指南: TECH/Backend/threadlocal-guide.html
+      - ThreadLocal 指南: REPOST/threadlocal-guide.html
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
       - Git工作流最佳实践指南: REPOST/git_workflow_guide.md
