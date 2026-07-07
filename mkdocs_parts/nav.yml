@@ -4,6 +4,7 @@
 nav:
   - 首页:
       - index.md
+      - 资源导航: grid-hub-navigation.html
       - 命名规范: naming-conventions.md
   - 项目:
       - PROJECT/index.md
@@ -91,6 +92,5 @@ nav:
   - 转载:
       - REPOST/index.md
       - ThreadLocal 指南: TECH/Backend/threadlocal-guide.html
-      - 资源导航: REPOST/grid-hub-navigation.html
       - 编写整洁代码的十大原则: REPOST/clean_code_principles.md
       - Git工作流最佳实践指南: REPOST/git_workflow_guide.md
