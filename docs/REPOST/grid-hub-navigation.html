@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>资源导航</title>
+    <meta name="description" content="个人独立高质资源导航站，精选开发工具、极客社区与创意设计素材。">
+    <meta name="keywords" content="资源导航, 开发者工具, 极客社区, 设计素材, 独立网页">
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('nav-theme');
+            const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme || preferredTheme);
+        })();
+    </script>
+
+    <style>
+        /* ==================== 现代感高级配色及全局变量 ==================== */
+        :root {
+            --bg-color: #f4f7fa;
+            --surface-color: rgba(255, 255, 255, 0.85);
+            --surface-strong: #ffffff;
+            --surface-muted: rgba(241, 245, 249, 0.8);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-color: #0f62fe;
+            --accent-hover: #0043ce;
+            --border-color: rgba(15, 23, 42, 0.06);
+            --border-strong: rgba(15, 23, 42, 0.12);
+            --active-bg: rgba(15, 98, 254, 0.06);
+            --tag-bg: rgba(15, 98, 254, 0.08);
+            --tag-text: #0f62fe;
+            --button-bg: #ffffff;
+            --button-hover: #f8fafc;
+            --shadow-soft: 0 10px 30px -10px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.02);
+            --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+            --shadow-hover: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+            --header-height: 90px;
+            --page-padding: 40px;
+            --content-max: 1320px;
+        }
+
+        html[data-theme="dark"] {
+            --bg-color: #080e1a;
+            --surface-color: rgba(22, 30, 49, 0.82);
+            --surface-strong: #111a2e;
+            --surface-muted: rgba(30, 41, 59, 0.5);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-hover: #7dd3fc;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --border-strong: rgba(255, 255, 255, 0.12);
+            --active-bg: rgba(56, 189, 248, 0.12);
+            --tag-bg: rgba(56, 189, 248, 0.12);
+            --tag-text: #38bdf8;
+            --button-bg: #1e293b;
+            --button-hover: #334155;
+            --shadow-soft: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 20px 40px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ==================== 基础复位 ==================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            background: 
+                radial-gradient(circle at 10% 12%, rgba(15, 98, 254, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 20%, rgba(99, 102, 241, 0.06), transparent 40%),
+                var(--bg-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        input:focus-visible,
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        button, input { font: inherit; background: none; border: none; }
+
+        .is-hidden { display: none !important; }
+
+        /* ==================== 布局外壳 ==================== */
+        .app-shell {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        body.menu-open { overflow: hidden; }
+
+        .site-header {
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner,
+        .main-layout,
+        .footer-inner {
+            width: 100%;
+            max-width: var(--content-max);
+            margin: 0 auto;
+            padding-left: var(--page-padding);
+            padding-right: var(--page-padding);
+        }
+
+        .header-inner {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand-meta {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        h1 { font-size: 24px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            padding: 0 16px;
+            background-color: var(--button-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 6px;
+        }
+
+        .action-button:hover {
+            background-color: var(--button-hover);
+            border-color: var(--text-muted);
+            transform: translateY(-1px);
+        }
+
+        .action-button.is-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #ffffff;
+        }
+        .action-button.is-primary:hover {
+            background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .menu-toggle { display: none; }
+
+        /* ==================== 主体双栏布局 ==================== */
+        .site-main { flex: 1 0 auto; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+            padding-top: 32px;
+            padding-bottom: 48px;
+        }
+
+        .sidebar-panel,
+        .content-panel {
+            min-width: 0;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+        }
+
+        .sidebar-panel {
+            padding: 24px;
+            position: sticky;
+            top: calc(var(--header-height) + 32px);
+            height: fit-content;
+        }
+
+        .content-panel { padding: 32px; }
+
+        .category-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+
+        .category-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .category-item {
+            width: 100%;
+            border-radius: 12px;
+            padding: 11px 14px;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .category-item:hover {
+            background-color: var(--active-bg);
+            padding-left: 18px;
+        }
+
+        .category-item.active {
+            background-color: var(--active-bg);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .category-count {
+            padding: 2px 8px;
+            border-radius: 20px;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ==================== 搜索与看板区域 ==================== */
+        .content-top {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            margin-bottom: 32px;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .search-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .search-inner { position: relative; width: 100%; }
+
+        .search-input {
+            width: 100%;
+            height: 52px;
+            padding: 12px 18px 12px 46px;
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            outline: none;
+            color: var(--text-main);
+            font-size: 15px;
+            background-color: var(--surface-strong);
+            transition: all 0.2s ease;
+        }
+
+        .search-icon-svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(15, 98, 254, 0.1);
+        }
+
+        .summary-card {
+            width: 240px;
+            padding: 16px 20px;
+            border-radius: 14px;
+            background-color: var(--surface-strong);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .summary-label { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; font-weight: 500; }
+        .summary-count { font-size: 28px; font-weight: 700; line-height: 1.1; color: var(--accent-color); }
+        .summary-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* ==================== 资源网格列表 ==================== */
+        .resource-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-item {
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-strong);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .resource-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent-color);
+        }
+
+        .resource-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .resource-title { font-size: 18px; font-weight: 600; line-height: 1.3; }
+
+        .resource-link { color: var(--text-main); transition: color 0.2s ease; }
+        .resource-item:hover .resource-link { color: var(--accent-color); }
+
+        .resource-tag {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            height: 24px;
+            padding: 0 10px;
+            border-radius: 6px;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .resource-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            padding: 48px;
+            border-radius: 16px;
+            border: 2px dashed var(--border-strong);
+            color: var(--text-muted);
+            text-align: center;
+            background-color: var(--surface-muted);
+            font-size: 14px;
+        }
+        .no-results-title { margin-bottom: 12px; font-weight: 500; }
+        .no-results-actions { display: flex; gap: 8px; justify-content: center; }
+
+        /* ==================== 页脚与移动端滑块 ==================== */
+        .site-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .footer-inner {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding-bottom: calc(0px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .footer-copy { font-size: 13px; color: var(--text-muted); }
+        .footer-actions { display: flex; gap: 8px; }
+
+        #backToTopBtn {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(4px);
+            transition: all 0.25s ease;
+        }
+        #backToTopBtn.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 85;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        /* ==================== 动效降级支持 ==================== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+                transform: none !important;
+            }
+        }
+
+        /* ==================== 响应式媒体查询 ==================== */
+        @media (max-width: 1024px) {
+            :root { --page-padding: 24px; }
+            .main-layout { grid-template-columns: 220px 1fr; gap: 20px; }
+            .content-panel { padding: 24px; }
+            .resource-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            :root { --header-height: 76px; --page-padding: 16px; }
+            .header-inner { height: var(--header-height); }
+            h1 { font-size: 20px; }
+            .menu-toggle { display: inline-flex; }
+            .main-layout { grid-template-columns: 1fr; gap: 16px; padding-top: 16px; }
+            
+            .sidebar-panel {
+                position: fixed;
+                top: var(--header-height);
+                left: 16px;
+                right: 16px;
+                z-index: 90;
+                display: none;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+
+            body.menu-open .sidebar-panel { display: block; }
+            body.menu-open .menu-backdrop { display: block; opacity: 1; }
+            
+            .content-panel { padding: 20px 16px; }
+            .content-top { flex-direction: column; gap: 12px; }
+            .summary-card { width: 100%; }
+
+            .footer-inner { flex-direction: column; height: auto; padding-top: 20px; padding-bottom: 30px; gap: 16px; text-align: center; }
+            .footer-actions { width: 100%; justify-content: center; }
+            .footer-actions .action-button { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
+<div class="app-shell" id="appShell">
+    
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand-block">
+                <div class="brand-meta">Grid Hub Navigation</div>
+                <h1>资源导航</h1>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="action-button menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="sidebarPanel">分类导航</button>
+                <button type="button" class="action-button" id="themeToggle" aria-label="切换明暗模式">切换深色模式</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <div class="main-layout">
+            
+            <aside class="sidebar-panel" id="sidebarPanel">
+                <nav aria-label="资源分类">
+                    <div class="category-title">资源分类</div>
+                    <div class="category-list" id="categoryList"></div>
+                </nav>
+            </aside>
+
+            <section class="content-panel">
+                <div class="content-top">
+                    <div class="search-wrapper">
+                        <label for="searchInput" class="search-label">快捷检索</label>
+                        <div class="search-inner">
+                            <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" id="searchInput" class="search-input" placeholder="输入关键字，进行多维交叉检索...">
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">当前筛出</div>
+                        <div class="summary-count" id="visibleCount">0</div>
+                        <p class="summary-text" id="summaryText">准备就绪</p>
+                    </div>
+                </div>
+
+                <ul class="resource-list" id="resourceList"></ul>
+
+                <div class="no-results is-hidden" id="noResults">
+                    <div class="no-results-title">未找到相关资源，请重新更换检索关键词。</div>
+                    <div class="no-results-actions">
+                        <button type="button" class="action-button" id="noResultsClear">清空输入</button>
+                        <button type="button" class="action-button is-primary" id="noResultsReset">查看全部</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p class="footer-copy">&copy; 2026 资源导航站 · 智能联动配置驱动版</p>
+            <div class="footer-actions">
+                <button type="button" class="action-button" id="showAllBtn">查看全部</button>
+                <button type="button" class="action-button" id="clearSearchBtn">清空搜索</button>
+                <button type="button" class="action-button" id="backToTopBtn">回到顶部</button>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // =========================================================================
+    // 核心配置项驱动区域
+    // =========================================================================
+    const CONFIG = {
+    "categories": {
+        "backend-base": "后端核心与语言",
+        "backend-infra": "数据与中间件",
+        "cloud-native": "云原生与运维",
+        "frontend-web": "大前端开发",
+        "mobile-dev": "移动端与小程序",
+        "ai-llm": "人工智能与大模型",
+        "academic-research": "学术科研与论文",
+        "work-corporate": "政企项目与信创",
+        "career-interview": "求职面试与备战",
+        "dev-efficiency": "效率利器与全栈",
+        "learning-blog": "技术博客与教程",
+        "misc-uncategorized": "其他随手备忘"
+    },
+    "resources": [
+        {
+            "title": "Selenium 介绍",
+            "url": "https://www.cnblogs.com/TankXiao/p/5252754.html",
+            "category": "backend-base",
+            "desc": "Java Selenium自动化测试工具介绍"
+        },
+        {
+            "title": "Landsat数据下载教程",
+            "url": "https://blog.csdn.net/haochibaa/article/details/80375622",
+            "category": "academic-research",
+            "desc": "提供最新Landsat卫星数据下载方法和指导"
+        },
+        {
+            "title": "NASA MODIS卫星影像下载方法",
+            "url": "http://bbs.3s001.com/thread-325832-1-1.html",
+            "category": "academic-research",
+            "desc": "介绍在NASA网站上免费下载MODIS卫星影像的具体步骤和方法"
+        },
+        {
+            "title": "如何下载firefox老版本",
+            "url": "https://blog.csdn.net/wuxiaobingandbob/article/details/53033069?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.baidujs&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.baidujs",
+            "category": "academic-research",
+            "desc": "提供下载Firefox旧版浏览器的方法，适用于撰写相关本科论文需求"
+        },
+        {
+            "title": "SeleniumHQ自动化",
+            "url": "https://www.selenium.dev/",
+            "category": "frontend-web",
+            "desc": "提供浏览器自动化工具和技术支持"
+        },
+        {
+            "title": "Google版本下载",
+            "url": "https://www.chromedownloads.net/chrome64win-stable/list_2_4.html",
+            "category": "academic-research",
+            "desc": "提供不同版本的Google软件下载资源，适用于本科论文研究"
+        },
+        {
+            "title": "app抓包,MVP模式,数据结构与算法学习笔记",
+            "url": "https://blog.csdn.net/qq122627018?type=blog",
+            "category": "academic-research",
+            "desc": "MVP模式下的app抓包及数据结构与算法学习"
+        },
+        {
+            "title": "(Selenium+java)设置Chrome下载路径",
+            "url": "https://blog.csdn.net/qq_33263769/article/details/100977563",
+            "category": "backend-base",
+            "desc": "Java中使用Selenium配置Chrome默认下载目录"
+        },
+        {
+            "title": "设置Chrome用户数据目录",
+            "url": "https://blog.csdn.net/shuidefu/article/details/99594596",
+            "category": "dev-efficiency",
+            "desc": "配置Chrome浏览器用户数据存储路径"
+        },
+        {
+            "title": "Selenium Java 测试教程",
+            "url": "http://www.testclass.net/selenium_java/",
+            "category": "learning-blog",
+            "desc": "学习Selenium在Java中的测试方法和技巧"
+        },
+        {
+            "title": "Selenium Webdriver Actions类模拟鼠标键盘操作",
+            "url": "https://blog.csdn.net/hanqionglaaa/article/details/8995262",
+            "category": "learning-blog",
+            "desc": "讲解如何使用Selenium WebDriver中的Actions类进行鼠标和键盘的操作模拟"
+        },
+        {
+            "title": "Selenium静默运行浏览器",
+            "url": "https://www.cnblogs.com/wulixia/p/11480328.html",
+            "category": "backend-base",
+            "desc": "使用Java和Selenium实现后台静默打开浏览器的技术文章"
+        }
+    ]
+};
+
+    // =========================================================================
+    // DOM 节点缓存与核心状态控制逻辑
+    // =========================================================================
+    const appShell = document.getElementById('appShell');
+    const menuBackdrop = document.getElementById('menuBackdrop');
+    const searchInput = document.getElementById('searchInput');
+    const categoryContainer = document.getElementById('categoryList');
+    const resourceContainer = document.getElementById('resourceList');
+    const noResults = document.getElementById('noResults');
+    const themeToggle = document.getElementById('themeToggle');
+    const menuToggle = document.getElementById('menuToggle');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const showAllBtn = document.getElementById('showAllBtn');
+    const visibleCount = document.getElementById('visibleCount');
+    const summaryText = document.getElementById('summaryText');
+    const noResultsClear = document.getElementById('noResultsClear');
+    const noResultsReset = document.getElementById('noResultsReset');
+
+    let currentCategory = 'all';
+    let currentTheme = 'light';
+    let DOMCards = [];
+
+    function isMobileViewport() { return window.matchMedia('(max-width: 768px)').matches; }
+
+    // ==================== 动态数据渲染引擎 ====================
+    function renderApp() {
+        let categoryHTML = `
+            <button type="button" class="category-item active" data-cate="all" id="cateBtn-all">
+                <span>全部资源</span>
+                <span class="category-count" id="count-all">0</span>
+            </button>
+        `;
+        Object.entries(CONFIG.categories).forEach(([key, label]) => {
+            categoryHTML += `
+                <button type="button" class="category-item" data-cate="${key}" id="cateBtn-${key}">
+                    <span>${label}</span>
+                    <span class="category-count" id="count-${key}">0</span>
+                </button>
+            `;
+        });
+        categoryContainer.innerHTML = categoryHTML;
+
+        let resourceHTML = '';
+        CONFIG.resources.forEach((item) => {
+            const tagLabel = CONFIG.categories[item.category] || '未知';
+            resourceHTML += `
+                <li class="resource-item" data-category="${item.category}">
+                    <div class="resource-header">
+                        <span class="resource-title">
+                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="resource-link">${item.title}</a>
+                        </span>
+                        <span class="resource-tag">${tagLabel}</span>
+                    </div>
+                    <p class="resource-desc">${item.desc}</p>
+                </li>
+            `;
+        });
+        resourceContainer.innerHTML = resourceHTML;
+
+        const elements = resourceContainer.querySelectorAll('.resource-item');
+        DOMCards = Array.from(elements).map((el, index) => {
+            const rawData = CONFIG.resources[index];
+            const catLabel = CONFIG.categories[rawData.category] || '';
+            const precompiledSearchStr = `${rawData.title} ${rawData.desc} ${catLabel}`.toLowerCase();
+            return {
+                dom: el,
+                category: rawData.category,
+                searchStr: precompiledSearchStr
+            };
+        });
+
+        document.querySelectorAll('.category-item').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentCategory = this.getAttribute('data-cate');
+                filterResources();
+                syncStateToURL();
+                if (isMobileViewport()) setMenuState(false);
+            });
+        });
+    }
+
+    // ==================== 多维联动检索控制层 ====================
+    function filterResources() {
+        const query = searchInput.value.toLowerCase().trim();
+        let globalMatchCount = 0;
+
+        const liveCounts = { all: 0 };
+        Object.keys(CONFIG.categories).forEach(k => liveCounts[k] = 0);
+
+        DOMCards.forEach((card) => {
+            const matchesCategory = (currentCategory === 'all' || card.category === currentCategory);
+            const matchesSearch = card.searchStr.includes(query);
+            const isVisible = matchesCategory && matchesSearch;
+
+            card.dom.classList.toggle('is-hidden', !isVisible);
+
+            if (isVisible) globalMatchCount++;
+            
+            if (matchesSearch) {
+                liveCounts.all++;
+                if (liveCounts[card.category] !== undefined) {
+                    liveCounts[card.category]++;
+                }
+            }
+        });
+
+        Object.entries(liveCounts).forEach(([cateKey, count]) => {
+            const badge = document.getElementById(`count-${cateKey}`);
+            if (badge) badge.textContent = String(count);
+        });
+
+        noResults.classList.toggle('is-hidden', globalMatchCount > 0);
+        visibleCount.textContent = String(globalMatchCount);
+        
+        const catLabel = currentCategory === 'all' ? '全部资源' : (CONFIG.categories[currentCategory] || '');
+        summaryText.textContent = query ? `分类“${catLabel}”下匹配“${query}”` : `当前展示：${catLabel}`;
+    }
+
+    // ==================== 状态控制流与高阶闭环交互 ====================
+    function applyTheme(theme) {
+        currentTheme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        themeToggle.textContent = theme === 'dark' ? '切换浅色模式' : '切换深色模式';
+        localStorage.setItem('nav-theme', theme);
+    }
+
+    // 关键优化点 1：将 document.body 作为统一控制移动端菜单的类宿主
+    function setMenuState(open) {
+        document.body.classList.toggle('menu-open', open);
+        menuToggle.setAttribute('aria-expanded', String(open));
+        menuToggle.textContent = open ? '收起分类' : '分类导航';
+    }
+
+    window.addEventListener('scroll', () => {
+        backToTopBtn.classList.toggle('is-visible', window.scrollY > 300);
+    }, { passive: true });
+
+    function syncStateToURL() {
+        const params = new URLSearchParams();
+        if (currentCategory !== 'all') params.set('cate', currentCategory);
+        if (searchInput.value.trim()) params.set('q', searchInput.value.trim());
+        
+        const newURL = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+        history.replaceState(null, '', newURL);
+    }
+
+    function loadStateFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const urlCate = params.get('cate');
+        const urlQuery = params.get('q');
+
+        if (urlCate && CONFIG.categories[urlCate]) {
+            currentCategory = urlCate;
+            document.querySelectorAll('.category-item').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-cate') === urlCate);
+            });
+        } else {
+            currentCategory = 'all';
+            document.querySelectorAll('.category-item').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-cate') === 'all');
+            });
+        }
+        searchInput.value = urlQuery || '';
+    }
+
+    themeToggle.addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+    menuToggle.addEventListener('click', () => setMenuState(!document.body.classList.contains('menu-open')));
+    menuBackdrop.addEventListener('click', () => setMenuState(false));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('menu-open')) setMenuState(false);
+    });
+
+    searchInput.addEventListener('input', () => {
+        filterResources();
+        syncStateToURL();
+    });
+
+    const resetToGlobalAll = () => {
+        currentCategory = 'all';
+        searchInput.value = '';
+        document.querySelectorAll('.category-item').forEach(b => b.classList.toggle('active', b.getAttribute('data-cate') === 'all'));
+        filterResources();
+        syncStateToURL();
+    };
+
+    clearSearchBtn.addEventListener('click', () => { searchInput.value = ''; filterResources(); syncStateToURL(); searchInput.focus(); });
+    noResultsClear.addEventListener('click', () => { searchInput.value = ''; filterResources(); syncStateToURL(); searchInput.focus(); });
+    showAllBtn.addEventListener('click', resetToGlobalAll);
+    noResultsReset.addEventListener('click', resetToGlobalAll);
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    
+    window.addEventListener('resize', () => { if (!isMobileViewport() && document.body.classList.contains('menu-open')) setMenuState(false); }, { passive: true });
+
+    // 关键优化点 3：增加 popstate 监听，让浏览器“前进/后退”可以完美还原搜索和筛选状态
+    window.addEventListener('popstate', () => {
+        loadStateFromURL();
+        filterResources();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('nav-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        applyTheme(savedTheme);
+        renderApp();
+        loadStateFromURL();
+        filterResources();
+    });
+</script>
+</body>
+</html>
