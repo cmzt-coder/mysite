@@ -9,3 +9,4 @@ created: 2026-07-11
 ## 内容
 
 - [Ubuntu Server WiFi 配置（RTL8821CE 网卡）](ubuntu-server-wifi-netplan-rtl8821ce.md)
+- [Ubuntu Server 部署 Mihomo 代理内核与 Web 仪表盘](ubuntu-server-mihomo-proxy-web-ui.md)
