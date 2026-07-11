@@ -61,6 +61,15 @@ nav:
           - 面试记录: INTERVIEW/20260702-alibabacloud/interview-notes.md
   - 服务器:
       - servers/index.md
+      - Linux:
+          - servers/linux/index.md
+          - Ubuntu Server WiFi 配置: servers/linux/ubuntu-server-wifi-netplan-rtl8821ce.md
+      - Docker:
+          - servers/docker/index.md
+      - Nginx:
+          - servers/nginx/index.md
+      - 故障排查:
+          - servers/troubleshooting/index.md
   - 工具:
       - Utils/index.md
       - Claude:
