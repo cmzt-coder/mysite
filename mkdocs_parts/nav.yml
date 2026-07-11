@@ -59,6 +59,8 @@ nav:
       - 20260702阿里云:
           - INTERVIEW/20260702-alibabacloud/index.md
           - 面试记录: INTERVIEW/20260702-alibabacloud/interview-notes.md
+  - 服务器:
+      - servers/index.md
   - 工具:
       - Utils/index.md
       - Claude:
