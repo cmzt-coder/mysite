@@ -85,6 +85,10 @@ nav:
           - Claude Code 使用手册: Utils/claude/claude-code-user-manual.md
           - Claude Code 命令大全（交互式）: Utils/claude/claude-code-interactive-commands.md
           - Claude Code 提示词: Utils/claude/claude-code-prompts.md
+          - Skill:
+              - Utils/claude/skill/index.md
+              - Claude Code 安装与配置 Caveman: Utils/claude/skill/claude-code-install-caveman.md
+              - Caveman 插件实战与省钱指南: Utils/claude/skill/caveman-official-practice-and-token-saving-guide.md
       - GSD 命令指南: Utils/gsd-claude-code-command-guide.md
       - Markdown 语法速查: Utils/markdown-syntax-cheatsheet.md
       - Homebrew 常用命令: Utils/homebrew-common-commands.md

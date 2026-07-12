@@ -7,4 +7,4 @@
 - [Claude Code 使用手册](claude-code-user-manual.md)
 - [Claude Code 命令大全（交互式）](claude-code-interactive-commands.md)
 - [Claude Code 提示词](claude-code-prompts.md)
-
+- [Skill](skill/index.md)
