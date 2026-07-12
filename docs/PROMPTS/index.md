@@ -15,5 +15,6 @@ created: 2026-07-02
 ## 分类入口
 
 - [通用](general/index.md)
+- [Claude Code](claude-code/index.md)
 - [编程](coding/index.md)
 - [写作](writing/index.md)
