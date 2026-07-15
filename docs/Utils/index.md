@@ -13,6 +13,7 @@
 - [macOS Navicat 安装](macos-navicat-installation-guide.md)
 - [Trae 配置指南](trae-international-config-guide.md)
 - [Conda 常用命令](conda-common-commands.md)
+- [Python 包管理工具（uv/pip/conda）](python-package-management-tools.md)
 - [nvm 常用命令](nvm-common-commands.md)
 - [Ollama 常用命令](ollama-common-commands.md)
 - [Milvus 检索体系](milvus-search/index.md)
