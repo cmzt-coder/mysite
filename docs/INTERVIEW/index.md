@@ -44,6 +44,7 @@
 
 ## 面试记录
 
+- [LLM 面试题记录](llm-interview-questions-notes.md)
 - [20260702阿里云](20260702-alibabacloud/index.md)
 
 ---

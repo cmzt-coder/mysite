@@ -63,6 +63,7 @@ nav:
           - 技术文章润色: PROMPTS/writing/tech-polish.md
   - 面试:
       - INTERVIEW/index.md
+      - LLM 面试题记录: INTERVIEW/llm-interview-questions-notes.md
       - 20260702阿里云:
           - INTERVIEW/20260702-alibabacloud/index.md
           - 面试记录: INTERVIEW/20260702-alibabacloud/interview-notes.md
