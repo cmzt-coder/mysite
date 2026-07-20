@@ -1,0 +1,31 @@
+/* 导航栏字体样式 */
+.md-tabs__link {
+    font-family: 'Helvetica Neue', 'Arial', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: none;
+    transition: all 0.3s ease;
+}
+
+/* 悬停效果 */
+.md-tabs__link:hover {
+    font-weight: 700;
+    color: #1976d2;
+    transform: translateY(-1px);
+}
+
+/* 激活状态样式 */
+.md-tabs__item--active .md-tabs__link {
+    font-weight: 700;
+    color: #1976d2;
+    border-bottom: 2px solid #1976d2;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .md-tabs__link {
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
