@@ -60,6 +60,7 @@ nav:
           - 代码审查: PROMPTS/coding/code-review.md
           - Python 项目详细文档生成器: PROMPTS/coding/python-doc-generator/index.md
           - py-doc：Python 文件逐行注释与说明文档: PROMPTS/coding/py-doc/index.md
+          - 项目复盘专家: PROMPTS/coding/project-reviewer.md
       - 写作:
           - PROMPTS/writing/index.md
           - 技术文章润色: PROMPTS/writing/tech-polish.md
